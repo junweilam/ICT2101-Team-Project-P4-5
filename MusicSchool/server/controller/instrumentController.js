@@ -43,7 +43,9 @@ exports.update = async (req, res) => {
         status: status,
         studioID: studioID
         }).from("Instruments").where({iid: iid}).then(data =>{
-        knex.select("*").from("Instruments").then(data =>{ 
+        
+        knex.select("*").from("Instruments").join("Studio", function(){
+        this.on("Instruments.studioID", "=", "Studio.sid")}).then(data =>{ 
             return res.json({success:true, data, message: "Instruments fetched!"});
         })
     }).catch(err => {

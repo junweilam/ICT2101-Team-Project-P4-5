@@ -83,6 +83,7 @@ export default class Instruments extends React.Component {
             console.log(content);
             if(content.success){
                 this.setState({
+                    content:content,
                     error:"",
                 })
                 return true;
