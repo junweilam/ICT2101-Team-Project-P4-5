@@ -50,6 +50,60 @@ knex.schema
     console.error(`There was an error setting up the database: ${error}`);
   });
 
+knex.schema
+  .hasTable("Instruments")
+  .then((exists) => {
+    if (!exists) {
+      return knex.schema
+        .createTable("Instruments", (table) => {
+          table.increments("iid").primary();
+          table.string("name")
+          table.string("type")
+          table.string("serialNumber")
+          table.string("status")
+          table.integer("studioID")
+          table.foreign("studioID").references("sid").inTable("Studios")
+        })
+        .then(() => {
+          console.log("Table 'Instruments' created");
+        })
+        .catch((error) => {
+          console.error(`There was an error creating table: ${error}`);
+        });
+    }
+  })
+  .then(() => {
+    console.log("done");
+  })
+  .catch((error) => {
+    console.error(`There was an error setting up the database: ${error}`);
+  });
+
+knex.schema
+  .hasTable("Studio")
+  .then((exists) => {
+    if (!exists) {
+      return knex.schema
+        .createTable("Studio", (table) => {
+          table.increments("sid").primary();
+          table.string("studioName");
+        })
+        .then(() => {
+          console.log("Table 'Studio' created");
+        })
+        .catch((error) => {
+          console.error(`There was an error creating table: ${error}`);
+        });
+    }
+  })
+  .then(() => {
+    console.log("done");
+  })
+  .catch((error) => {
+    console.error(`There was an error setting up the database: ${error}`);
+  });
+
+
 // Just for debugging purposes:
 // Log all data in "books" table
 knex

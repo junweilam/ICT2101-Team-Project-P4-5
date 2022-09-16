@@ -147,7 +147,6 @@ export default class DatapageLayout extends React.Component {
         )
     }
 }
-
 export class TableHeader extends React.Component {
     constructor(props) {
         super(props);

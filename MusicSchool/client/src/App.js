@@ -14,14 +14,8 @@ import dashboard from "./Assets/nav/dashboard.png";
 import Details from './Pages/Details';
 
 import Users from './Pages/Users';
-import Skills from './Pages/Skills';
-
-import Polytechnics from './Pages/Polytechnics';
-import PolytechnicCourses from './Pages/PolytechnicCourses';
-import PolytechnicModules from './Pages/PolytechnicModules';
-import Universities from './Pages/Universities';
-import UniversityCourses from './Pages/UniversityCourses';
-import UniversityModules from './Pages/UniversityModules';
+import Studios from './Pages/Studio';
+import Instruments from './Pages/Instruments';
 
 /* function getToken() {  
   const tokenString = sessionStorage.getItem('token');
@@ -77,13 +71,8 @@ export default function App() {
               <DrawerSection label={"Modules"}>
                 <DrawerItem label="Dashboard" to={"/"} logo={dashboard}></DrawerItem>
                 <DrawerItem label="Users" to={"/Users"} logo={dashboard}></DrawerItem>
-                <DrawerItem label="Skills" to={"/Skills"} logo={dashboard}></DrawerItem>
-                <DrawerItem label="Polytechnics" to={"/Polytechnics"} logo={dashboard}></DrawerItem>
-                <DrawerItem label="Polytechnic Courses" to={"/PolytechnicCourses"} logo={dashboard}></DrawerItem>
-                <DrawerItem label="Polytechnic Modules" to={"/PolytechnicModules"} logo={dashboard}></DrawerItem>
-                <DrawerItem label="Universities" to={"/Universities"} logo={dashboard}></DrawerItem>
-                <DrawerItem label="University Courses" to={"/UniversityCourses"} logo={dashboard}></DrawerItem>
-                <DrawerItem label="University Modules" to={"/UniversityModules"} logo={dashboard}></DrawerItem>
+                <DrawerItem label="Studios" to={"/Studios"} logo={dashboard}></DrawerItem>
+                <DrawerItem label="Instruments" to={"/Instruments"} logo={dashboard}></DrawerItem>
               </DrawerSection>
             </SlideDrawer>
             <Routes>
@@ -93,19 +82,9 @@ export default function App() {
               </Route>
               <Route path="/Users" element={<Users user={token}/>}>
               </Route>
-              <Route path="/Skills" element={<Skills user={token}/>}>
+              <Route path="/Studios" element={<Studios user={token}/>}>
               </Route>
-              <Route path="/Polytechnics" element={<Polytechnics user={token}/>}>
-              </Route>
-              <Route path="/PolytechnicCourses" element={<PolytechnicCourses user={token}/>}>
-              </Route>
-              <Route path="/PolytechnicModules" element={<PolytechnicModules user={token}/>}>
-              </Route>
-              <Route path="/Universities" element={<Universities user={token}/>}>
-              </Route>
-              <Route path="/UniversityCourses" element={<UniversityCourses user={token}/>}>
-              </Route>
-              <Route path="/UniversityModules" element={<UniversityModules user={token}/>}>
+              <Route path="/Instruments" element={<Instruments user= {token}/>}>
               </Route>
               <Route path="/Logout" element={<Logout logout={logout}></Logout>}></Route>
             </Routes>
@@ -120,7 +99,7 @@ export default function App() {
 class LoggedInNav extends React.Component {
 
   state = {
-    title: "ExemptionChecker"
+    title: "MUSE"
   }
   componentDidMount() {
     window.addEventListener("resize", this.resize.bind(this));
@@ -131,11 +110,11 @@ class LoggedInNav extends React.Component {
     const md = 768;
    if(window.innerWidth >= md){
         this.setState({
-          title: "ExemptionChecker"
+          title: "MUSE"
         })
     } else{
         this.setState({
-          title: "ExemptionChecker"
+          title: "MUSE"
         })
     }
   }
@@ -166,7 +145,7 @@ class LoggedOutNav extends React.Component {
     return (
 
       <Nav title={
-        "ExemptionChecker"
+        "MUSE"
       } toggle={this.props.toggle} >
       </Nav>
     )

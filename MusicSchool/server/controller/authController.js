@@ -11,7 +11,7 @@ exports.allUsers = async (req, res) => {
 
 exports.create = async (req, res) => {
     const {username, password} = req.body;
-    knex.insert({username: username, password: SHA256(password), role: "user"}).into("Users").then(data =>{
+    knex.insert({username: username, password: SHA256(password), role: "staff"}).into("Users").then(data =>{
         knex.select("*").from("Users").where({username:username}).then(data =>{
         res.json({success:true, data, message: "User created!"});
         }).catch(err => {
@@ -32,33 +32,13 @@ exports.delete = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-    const {uid, username, password, role, polytechnicCourse,polytechnicAdmissionYear,universityCourse,universityAdmissionYear} = req.body;
-    if(polytechnicCourse == null && polytechnicAdmissionYear != null){
-        return res.json({success:false, message: "Polytechnic course cannot be empty!"});
-    } 
-
-    
-
-    universityCourses = await knex.select("*").from("UniversityCourses").then(uniCourseData =>{
-        var tempCourseList = [];
-        console.log(uniCourseData);
-        for(unicourse in uniCourseData){
-            tempCourseList.push({label: uniCourseData[unicourse]["course code"] + " - " +  uniCourseData[unicourse]["course name"], value:  uniCourseData[unicourse]["cid"]});
-        }
-        console.log(tempCourseList)
-        return tempCourseList;
-    });
-
+    const {uid, username, password, role} = req.body;
 
     knex.update({
         uid: uid, 
         username:username, 
         password: password, 
         role: role, 
-        polytechnicCourse: polytechnicCourse, 
-        polytechnicAdmissionYear: polytechnicAdmissionYear,
-        universityCourse: universityCourse,
-        universityAdmissionYear: universityAdmissionYear
         }).from("Users").where({uid: uid}).then(data =>{
         knex.select("*").from("Users").then(data =>{ 
             return res.json({success:true, data, message: "Users fetched!"});
@@ -83,25 +63,6 @@ exports.login = async (req, res) => {
 
 exports.settings = async (req, res) => {
     const {uid} = req.body;
-    polytechnicCourses = await knex.select("*").from("PolytechnicCourses").then(polyCourseData =>{
-        var tempCourseList = [];
-        console.log(polyCourseData);
-        for(polycourse in polyCourseData){
-            tempCourseList.push({label: polyCourseData[polycourse]["course code"] + " - " +  polyCourseData[polycourse]["course name"], value:  polyCourseData[polycourse]["cid"]});
-        }
-        console.log(tempCourseList)
-        return tempCourseList;
-    });
-
-    universityCourses = await knex.select("*").from("UniversityCourses").then(uniCourseData =>{
-        var tempCourseList = [];
-        console.log(uniCourseData);
-        for(unicourse in uniCourseData){
-            tempCourseList.push({label: uniCourseData[unicourse]["course code"] + " - " +  uniCourseData[unicourse]["course name"], value:  uniCourseData[unicourse]["cid"]});
-        }
-        console.log(tempCourseList)
-        return tempCourseList;
-    });
 
 
     const columnSettings = {
@@ -128,27 +89,20 @@ exports.settings = async (req, res) => {
             editable:true,
             displayLabel: "Username",
         },
-        "role":{
-            type: "text",
-            editable:true,
-            displayLabel: "Role",
-        },
         "password":{
             type: "password",
             editable:false,
             displayLabel: "Password",
         },
-        "polytechnicCourse":{
+        "role":{
             type: "dropdown",
             editable:true,
-            displayLabel: "Polytechnic Course",
-            options: polytechnicCourses,
-        },
-        "universityCourse":{
-            type: "dropdown",
-            editable:true,
-            displayLabel: "University Course",
-            options: universityCourses,
+            displayLabel: "Role",
+            options: [
+                {value: "staff", label: "Staff"},
+                {value: "admin", label: "Admin"},
+                {value: "manager", label: "Manager"}
+            ]
         },
     }
 

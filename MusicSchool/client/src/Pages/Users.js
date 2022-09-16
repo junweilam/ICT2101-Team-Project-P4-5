@@ -2,7 +2,6 @@
 import React from "react"
 import { ListMapper } from "../Components/common"
 import DatapageLayout from "./PageLayout"
-import { CourseSkills } from "./UniversityCourses"
 
 export default class Users extends React.Component {
     state={
@@ -123,16 +122,6 @@ export default class Users extends React.Component {
                 updateHandle = {this.handleUpdate}
                 requestRefresh = {this.requestRefresh}
                 error={this.state.error}>
-                {this.state.content.data.map((item, index) => {
-                    return <div>
-                        <UserSkillMapper
-                            key={index + "user"}
-                            uid={item.uid}/>
-                        <CourseSkills
-                            key={index + "course"}
-                            cid={item.universityCourse}/>
-                        </div>
-                })}
             </DatapageLayout>
             
             )
