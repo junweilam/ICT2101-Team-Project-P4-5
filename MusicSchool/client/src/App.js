@@ -109,9 +109,9 @@ export default function App() {
             }
             {token.data[0].role === "staff" &&
             <Routes>
-              <Route exact path="/" element={<StaffLanding />}>
+              <Route exact path="/" element={<StaffLanding  user={token}/>}>
               </Route>
-              <Route exact path="/Availabilities" element={<Availabilities />}>
+              <Route exact path="/Availabilities" element={<Availabilities  user={token}/>}>
               </Route>
               <Route path="/Logout" element={<Logout logout={logout}></Logout>}>
               </Route>
@@ -120,7 +120,7 @@ export default function App() {
             {token.data[0].role === "manager" &&
             
             <Routes>
-              <Route exact path="/" element={<ManagerLanding />}>
+              <Route exact path="/" element={<ManagerLanding  user={token}/>}>
             </Route>
               <Route path="/Logout" element={<Logout logout={logout}></Logout>}></Route>
             </Routes>

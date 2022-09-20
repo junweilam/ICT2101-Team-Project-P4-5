@@ -9,6 +9,15 @@ exports.allUsers = async (req, res) => {
     });
 }
 
+exports.allUsersOfRole = async (req, res) => {
+    const {role} = req.body;
+    knex.select("*").from("Users").where({role: role}).then(data =>{
+        res.json({success:true, data, message: "Users fetched!"});
+    }).catch(err => {
+        res.json({success:false, message: err.message});
+    });
+}
+
 exports.create = async (req, res) => {
     const {username, password, role} = req.body;
     knex.insert({username: username, password: SHA256(password), role: (role? role :  "staff")}).into("Users").then(data =>{
@@ -112,4 +121,53 @@ exports.settings = async (req, res) => {
     }
 
     res.json({success : true, settings: settings, message: "Settings fetched!"});
+}
+
+exports.managerSettings = async (req, res) => {
+
+
+
+    const columnSettings = {
+        // Configures the headers of the table
+        // Pls match header names with column names (case sensitive!)
+        headers: [
+            "uid",
+            "username",
+            "role",
+            "hours",
+        ]
+    }
+
+    const fieldSettings = {
+        // Configures the datatype of the fields and their editablility
+        "uid":{
+            type: "number",
+            editable:false,
+            displayLabel: "User ID",
+            primaryKey: true
+        },
+        "username":{
+            type: "text",
+            editable:false,
+            displayLabel: "Username",
+        },
+        "role":{
+            type: "dropdown",
+            editable:false,
+            displayLabel: "Role",
+            options: [
+                {value: "staff", label: "Staff"},
+                {value: "admin", label: "Admin"},
+                {value: "manager", label: "Manager"}
+            ]
+        },
+    }
+
+    const settings = {
+        columnSettings: columnSettings,
+        fieldSettings: fieldSettings
+    }
+
+    res.json({success : true, settings: settings, message: "Settings fetched!"});
+
 }

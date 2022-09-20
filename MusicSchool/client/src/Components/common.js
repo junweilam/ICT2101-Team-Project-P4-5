@@ -1382,14 +1382,14 @@ export class WeekView extends React.Component{
     }
 
     generateCalendar = () =>{
-        const startDay = this.state.currentMonth.clone().subtract(1,"day");
+        const startDay = this.state.currentMonth.clone().startOf("week").subtract(1,"day");
 
         var calendar = [];
         var index = startDay.clone();
             calendar = 
                 new Array(7).fill(0).map(
                     function(n, i) {
-                        return {date: index.add(1, 'day').date(), day: index.format("ddd"), month: index.format("MM")};
+                        return {date: index.add(1, 'day').date(), day: index.format("ddd"), month: index.format("MM"), fullDateFormat: index.format("DD-MM-YYYY")};
                     }
                 );
         return calendar;
@@ -1448,20 +1448,43 @@ export class WeekView extends React.Component{
                     <div className="weekView-timeHeader" style={{"--columns" : this.state.timeSlots.length}}>
                         {this.state.timeSlots.map((timeSlot, index) => {
                             return (
-                                <div className="weekView-week">
-                                    <div className="timeSlot">{timeSlot.time}</div>
-                                    <div className="weekView-day">
-                                        <div className="weekView-day-event">Lesson 1</div>
-                                        <div className="weekView-day-event">Lesson 2</div>
-                                        <div className="weekView-day-event">Lesson 3</div>
-                                        <div className="weekView-day-event">Lesson 4</div>
-                                        <div className="weekView-day-event">Lesson 5</div>
-                                        <div className="weekView-day-event">Lesson 6</div>
-                                        <div className="weekView-day-event">Lesson 7</div>
-                                    </div>
-                                </div>
+                                <div className="timeSlot">{timeSlot.time}</div>
                             )
                         })}
+                        <div className="weekView-days">
+                        {this.state.calendar.map((day, index) => {
+                            console.log(this.props.items);
+                            let item = "";
+                            if(this.props.items.hasOwnProperty(day.fullDateFormat)){
+                                item = this.props.items[day.fullDateFormat];
+                                return(
+                                    <div className="weekView-day" style={{"--columns" : this.state.timeSlots.length}}>
+                                        {this.state.timeSlots.map((timeSlot, index) => {
+                                            return (
+                                                <div className="weekView-timeSlot">
+                                                    <div className="event">{item[timeSlot.time]}</div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                )
+                            }else{
+                                
+                                return(
+                                    <div className="weekView-day" style={{"--columns" : this.state.timeSlots.length}}>
+                                        {this.state.timeSlots.map((timeSlot, index) => {
+                                            return (
+                                                <div className="weekView-timeSlot">
+                                                    <div className="event">-</div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                )
+                            }
+                            
+                        })}
+                        </div>
                     </div>
                 </div>
             </div>

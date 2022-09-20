@@ -21,11 +21,46 @@ export default class staffLanding extends React.Component{
 }
 
 export class WeekSchedule extends React.Component{
+
+    state={
+        items: {
+            "20-09-2022": {
+                "8:00": "BREAK",
+                "8:30":"Lesson 1",
+                "9:00":"Lesson 2",
+                "9:30":"Lesson 3",
+                "10:00":"Lesson 4",
+                "10:30":"Lesson 5",
+                "11:00":"Lesson 6",
+                "11:30":"Lesson 7",
+                "12:00":"Lesson 8",
+                "12:30":"Lesson 9",
+                "13:00":"Lesson 10",
+                "13:30":"Lesson 11",
+                "14:00":"Lesson 12",
+                "14:30":"Lesson 13",
+                "15:00":"Lesson 14",
+                "15:30":"Lesson 15",
+                "16:00":"Lesson 16",
+                "16:30":"Lesson 17",
+                "17:00":"Lesson 18",
+                "17:30":"Lesson 19",
+                "18:00":"Lesson 20",
+                "18:30":"Lesson 21",
+                "19:00":"Lesson 22",
+                "19:30":"Lesson 23",
+                "20:00":"Lesson 24",
+                "20:30":"Lesson 25",
+
+            }
+        }
+    }
+
     render(){
         return(
             <div className={"cardBg"}>
                 <div className="cardHeader">This week's schedule</div>
-                <WeekView></WeekView>
+                <WeekView items ={this.state.items}></WeekView>
 
             </div>
         )

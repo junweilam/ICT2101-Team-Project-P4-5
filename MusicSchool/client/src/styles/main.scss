@@ -3333,10 +3333,21 @@ nav {
         flex-grow: 1;
         display: grid;
         grid-template-columns: repeat(var(--columns), minmax(150px,150px));
+        column-gap: 1px;
+        row-gap: 1px;
         font-weight: bold;
         font-size: $medium-font;
         overflow: auto;
-        
+        background-color: $primary;
+        .timeSlot{
+            height:50px;
+            display:flex;
+            align-items: center;
+            color:white;
+            font-weight: bold;
+            font-size: $medium-font;
+            padding:15px;
+        }
         .weekView-week{
             overflow: hidden;
             .timeSlot{
@@ -3344,6 +3355,20 @@ nav {
                 font-size: $large-font;
                 height:50px;
             }
+
+            .event{
+                height:50px;
+                display:flex;
+                align-items: center;
+                justify-content: flex-start;
+                background-color: white;
+            }
+        }
+        .weekView-days{
+            display:grid;
+            row-gap: 1px;
+            column-gap: 1px;
+            background-color: $primary;
         }
     }
     .weekView-week-container{
@@ -3360,6 +3385,8 @@ nav {
         .weekView-weekDays{
             display:grid;
             grid-template-rows: repeat(var(--rows), minmax(50px,50px));
+            column-gap: 1px;
+            row-gap: 1px;
             .weekView-days{
             display:flex;
             flex-direction:column;
@@ -3387,11 +3414,20 @@ nav {
         }
         .weekView-day{
             display:grid;
-            grid-template-rows: repeat(7,minmax(50px,50px));
-            
+            grid-template-columns: repeat(var(--columns),minmax(150px,150px));
+            column-gap: 1px;
+            row-gap: 1px;
             font-weight: bold;
             font-size: $large-font;
-            
+            .weekView-timeSlot{
+                .event{
+                    height:50px;
+                    display:flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    background-color: white;
+                }
+            }
         }
     }
 }
