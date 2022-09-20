@@ -11,11 +11,15 @@ import Logout from './Pages/Logout';
 import SlideDrawer, { Backdrop, DrawerItem, DrawerSection } from './Components/sideNav';
 
 import dashboard from "./Assets/nav/dashboard.png";
-import Details from './Pages/Details';
 
 import Users from './Pages/Users';
 import Studios from './Pages/Studio';
 import Instruments from './Pages/Instruments';
+
+import ManagerLanding from './Pages/manager/manager-landing';
+
+import StaffLanding from './Pages/staff/staff-landing';
+import Availabilities from './Pages/staff/availabilities';
 
 /* function getToken() {  
   const tokenString = sessionStorage.getItem('token');
@@ -68,13 +72,27 @@ export default function App() {
           <header className="App-header">
             {backdrop}
             <SlideDrawer show={drawerOpen} toggle={drawerToggleClickHandler} direction={"top"}>
+              {token.data[0].role === "admin" && 
               <DrawerSection label={"Modules"}>
                 <DrawerItem label="Dashboard" to={"/"} logo={dashboard}></DrawerItem>
                 <DrawerItem label="Users" to={"/Users"} logo={dashboard}></DrawerItem>
                 <DrawerItem label="Studios" to={"/Studios"} logo={dashboard}></DrawerItem>
                 <DrawerItem label="Instruments" to={"/Instruments"} logo={dashboard}></DrawerItem>
               </DrawerSection>
+              }
+              {token.data[0].role === "staff" &&
+              <DrawerSection label={"Modules"}>
+                <DrawerItem label="Home" to={"/"} logo={dashboard}></DrawerItem>
+                <DrawerItem label="Availabilities" to={"/Availabilities"} logo={dashboard}></DrawerItem>
+              </DrawerSection>
+              }
+              {token.data[0].role === "manager" &&
+              <DrawerSection label={"Modules"}>
+                <DrawerItem label="Home" to={"/"} logo={dashboard}></DrawerItem>
+              </DrawerSection>
+              }
             </SlideDrawer>
+            {token.data[0].role === "admin" &&
             <Routes>
               <Route exact path="/" element={<DefaultPage />}>
               </Route>
@@ -88,6 +106,25 @@ export default function App() {
               </Route>
               <Route path="/Logout" element={<Logout logout={logout}></Logout>}></Route>
             </Routes>
+            }
+            {token.data[0].role === "staff" &&
+            <Routes>
+              <Route exact path="/" element={<StaffLanding />}>
+              </Route>
+              <Route exact path="/Availabilities" element={<Availabilities />}>
+              </Route>
+              <Route path="/Logout" element={<Logout logout={logout}></Logout>}>
+              </Route>
+            </Routes>
+            }
+            {token.data[0].role === "manager" &&
+            
+            <Routes>
+              <Route exact path="/" element={<ManagerLanding />}>
+            </Route>
+              <Route path="/Logout" element={<Logout logout={logout}></Logout>}></Route>
+            </Routes>
+            }
           </header>
         </div>
       </Router>
@@ -128,22 +165,9 @@ class LoggedInNav extends React.Component {
   }
 }
 
-class SwappingNavTitle extends React.Component{
-  render(){
-    return(
-      <div className='SwappingNavTitleContainer'>
-        <span className={"SwappingNavTitle"}>{this.props.title}</span>
-        {this.props.secondaryTitle}
-      </div>
-    )
-  }
-}
-
 class LoggedOutNav extends React.Component {
   render() {
-
     return (
-
       <Nav title={
         "MUSE"
       } toggle={this.props.toggle} >

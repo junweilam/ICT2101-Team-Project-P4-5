@@ -142,14 +142,11 @@ export default class Studios extends React.Component {
                 updateHandle = {this.handleUpdate}
                 requestRefresh = {this.requestRefresh}
                 error={this.state.error}>
-                    
                 {this.state.content.data.map((item, index) => {
                     return(
                         <div> <InstrumentList settings={this.state.settings} data={this.state.instruments.data} sid={item.sid}/>
                     </div>
-
                     ) 
-                    
                 })}
             </DatapageLayout>
             

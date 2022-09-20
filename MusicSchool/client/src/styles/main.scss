@@ -2,6 +2,7 @@
 
 .App-header {
     min-height: calc(100vh - 56px);
+    background-color: rgb(250,250,250);
 }
 
 
@@ -16,6 +17,12 @@ $default: #8d9ba7;
 $chimericBlack: rgb(60, 60, 60);
 $borderRadius: 8px;
 $box-shadow: 5px 5px 15px rgba(60, 60, 60, .1);
+
+$small-font: 0.75rem;
+$medium-font: 1rem;
+$large-font: 1.25rem;
+$extra-large-font: 1.5rem;
+$extra-extra-large-font: 2rem;
 
 .borderRadius {
     border-radius: $borderRadius;
@@ -391,7 +398,8 @@ nav {
     padding: 7.5px;
     transition-duration: 500ms;
     background-color: white;
-    //box-shadow: 5px 5px 0px whitesmoke;
+    border-radius: $borderRadius;
+    box-shadow: 5px 5px 0px whitesmoke;
 
     &.light {
         background-color: white;
@@ -994,7 +1002,7 @@ nav {
         display: inline-flex;
         position: relative;
         transition: 0.3s;
-        justify-content: start;
+        justify-content: flex-start;
         border-top-left-radius: 50%;
         border-top-right-radius: 50%;
         opacity: 0;
@@ -3237,6 +3245,153 @@ nav {
         100% {
             transform: translate(-50%, -50%) scale(1);
             opacity: 0;
+        }
+    }
+}
+
+.monthView{
+    .monthView-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 15px;
+        margin-left: 0px;
+        margin-right: 0px;
+        font-weight: bold;
+        font-size: $large-font;
+    }
+    .monthView-daysHeader{
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        column-gap: 15px;
+        row-gap: 15px;
+        margin: 15px;
+        margin-left: 0px;
+        margin-right: 0px;
+        font-weight: bold;
+        font-size: $medium-font;
+        justify-items: center;
+    }
+    .monthView-days{
+        display: flex;
+        flex-direction: column;
+        column-gap: 15px;
+        row-gap: 15px;
+        margin: 15px;
+        margin-left: 0px;
+        margin-right: 0px;
+        font-size: $medium-font;
+        justify-items: center;
+
+        .monthView-week{
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            column-gap: 15px;
+            row-gap: 15px;
+            justify-items: center;
+            align-items: center;
+
+            .monthView-day{
+                padding: 10px;
+                border-radius: $borderRadius;
+                transition: 0.3s linear;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                cursor: pointer;
+
+                &:hover{
+                    background-color: #eee;
+                }
+
+                &.active{
+                    background-color: rgba($active, 0.8);
+                    color:white;
+
+                    &:hover{
+                        background-color: rgba($active,1);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.weekView{
+    .weekView-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 15px;
+        margin-left: 0px;
+        margin-right: 0px;
+        font-weight: bold;
+        font-size: $large-font;
+    }
+    .weekView-timeHeader{
+        flex-grow: 1;
+        display: grid;
+        grid-template-columns: repeat(var(--columns), minmax(150px,150px));
+        font-weight: bold;
+        font-size: $medium-font;
+        overflow: auto;
+        
+        .weekView-week{
+            overflow: hidden;
+            .timeSlot{
+                font-weight: bold;
+                font-size: $large-font;
+                height:50px;
+            }
+        }
+    }
+    .weekView-week-container{
+        display: inline-flex;
+        column-gap: 15px;
+        row-gap: 15px;
+        justify-items: flex-start;
+        align-items: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        width:100%;
+
+
+        .weekView-weekDays{
+            display:grid;
+            grid-template-rows: repeat(var(--rows), minmax(50px,50px));
+            .weekView-days{
+            display:flex;
+            flex-direction:column;
+            justify-content: center;
+            align-items: center;
+            padding:15px;
+            border-radius: 25px;
+            span{
+                font-weight: bold;
+                font-size: $large-font;
+                &.day{
+                    font-size: $medium-font;
+                }
+            }
+            &.active{
+                background-color: $active;
+                color:white;
+            }
+            }
+        }
+
+        .weekView-time{
+            display:flex;
+            flex-grow: 1;
+        }
+        .weekView-day{
+            display:grid;
+            grid-template-rows: repeat(7,minmax(50px,50px));
+            
+            font-weight: bold;
+            font-size: $large-font;
+            
         }
     }
 }
