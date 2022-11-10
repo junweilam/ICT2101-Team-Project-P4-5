@@ -1,10 +1,9 @@
 import React from "react";
-import { InputField } from "../Components/formElements";
-import { useState } from "react";
 import PropTypes from 'prop-types';
-import { MultiStepBox, StdButton, Step} from "../Components/common";
-import { DetailsContainerDivider } from "./Details";
+import { MultiStepBox, StdButton} from "../Components/common";
 import { StdInput } from "../Components/input";
+
+import ttshlogo from "../Assets/ttshlogo.png";
 
 const loginSteps = {0: "login", 1: "register",2: "forgot"}
 
@@ -38,6 +37,7 @@ export default class Login extends React.Component {
       password: "",
       message: "",
       transform: "translateX(0%)",
+      maxHeight: window.innerHeight
     }
     this.setPassword = this.setPassword.bind(this);
     this.setUsername = this.setUsername.bind(this);
@@ -48,15 +48,9 @@ export default class Login extends React.Component {
   }
 
   resize = () => {
-    if (window.innerWidth <= 576) {
-      this.setState({
-        transform: 'translateX(0%)'
-      })
-    } else {
-      this.setState({
-        transform: 'translateX(0%)'
-      })
-    }
+    this.setState({
+      maxHeight: window.innerHeight
+    })
   }
 
   setStep(e) {
@@ -131,7 +125,7 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <div className="d-flex loginPage">
+      <div className="d-flex loginPage" style={{maxHeight: this.state.maxHeight}}>
         <div className="loginContainer">
           <div className="leftPanel" style={{ transform: this.state.transform }}>
             <MultiStepBox steps={loginSteps} currentStep={0}>
@@ -139,9 +133,11 @@ export default class Login extends React.Component {
                 handleSubmit={this.handleLogin}
                 fields={[{
                   label: "Username",
+                  type:"text",
                   onChange: this.setUsername,
                 }, {
                   label: "Password",
+                  type:"password",
                   onChange: this.setPassword,
                 }]}
                 actions={[{
@@ -154,9 +150,11 @@ export default class Login extends React.Component {
                 handleSubmit={this.handleRegister}
                 fields={[{
                   label: "Username",
+                  type:"text",
                   onChange: this.setUsername,
                 }, {
                   label: "Password",
+                  type:"password",
                   onChange: this.setPassword,
                 }]}
                 actions={[{
@@ -169,6 +167,7 @@ export default class Login extends React.Component {
                 handleSubmit={this.handleSubmit}
                 fields={[{
                   label: "Email",
+                  type:"email",
                   onChange: () => { },
                 }]}
                 actions={[{
@@ -198,7 +197,7 @@ export default class Login extends React.Component {
                 <li></li>
               </ul>}
               <div className="logoContainer">
-
+                <img src={ttshlogo} alt="logo" />
               </div>
               <div className="logoCaption">
                 <h1>
@@ -232,7 +231,7 @@ export class LoginFormBox extends React.Component {
         <form onSubmit={this.props.handleSubmit}>
           {this.props.fields.map((field, index) => {
             return (
-              <StdInput key={index} enabled={true} showIndicator={false} showSaveBtn={false} label={field.label} onChange={field.onChange}></StdInput>
+              <StdInput type={field.type} key={index} enabled={true} showIndicator={false} showSaveBtn={false} label={field.label} onChange={field.onChange}></StdInput>
             )
           })}
           <div className="row-cols-md-2 row-cols-1 loginActions">
@@ -241,8 +240,8 @@ export class LoginFormBox extends React.Component {
                 <StdButton key={index} type={action.type} className="primary" onClick={action.onClick}>{action.label}</StdButton>)
             })}
           </div>
-          <div onClick={()=>this.props.setStep(1)}><a className="forgetPassword">Don't have an account? Click here to register.</a></div>
-          <div onClick={()=>this.props.setStep(2)}><a className="forgetPassword">Forgot Password?</a></div>
+          <div onClick={()=>this.props.setStep(1)}><span className="forgetPassword" href="#">Don't have an account? Click here to register.</span></div>
+          <div onClick={()=>this.props.setStep(2)}><span className="forgetPassword" href="#">Forgot Password?</span></div>
         </form>
         <div className="spacer">
         </div>
@@ -262,7 +261,7 @@ export class RegisterFormBox extends React.Component {
         <form onSubmit={this.props.handleSubmit}>
           {this.props.fields.map((field, index) => {
             return (
-              <StdInput key={index} enabled={true} showIndicator={false} showSaveBtn={false} label={field.label} onChange={field.onChange}></StdInput>
+              <StdInput type={field.type} key={index} enabled={true} showIndicator={false} showSaveBtn={false} label={field.label} onChange={field.onChange}></StdInput>
             )
           })}
           <div className="row-cols-md-2 row-cols-1 loginActions">
@@ -271,8 +270,8 @@ export class RegisterFormBox extends React.Component {
                 <StdButton key={index} type={action.type} className="primary" onClick={action.onClick}>{action.label}</StdButton>)
             })}
           </div>
-          <div onClick={()=>this.props.setStep(0)}><a className="forgetPassword">Already have an account?</a></div>
-          <div onClick={()=>this.props.setStep(2)}><a className="forgetPassword">Forgot Password?</a></div>
+          <div onClick={()=>this.props.setStep(0)}><span className="forgetPassword" href={"#"}>Already have an account?</span></div>
+          <div onClick={()=>this.props.setStep(2)}><span className="forgetPassword" href={"#"}>Forgot Password?</span></div>
         </form>
         <div className="spacer">
         </div>
@@ -292,7 +291,7 @@ export class ForgetPasswordFormBox extends React.Component {
         <form onSubmit={this.props.handleSubmit}>
           {this.props.fields.map((field, index) => {
             return (
-              <StdInput key={index} showIndicator={false} showSaveBtn={false} label={field.label} onChange={field.onChange}></StdInput>
+              <StdInput type={field.type} key={index} showIndicator={false} showSaveBtn={false} label={field.label} onChange={field.onChange}></StdInput>
             )
           })}
           <div className="loginActions">

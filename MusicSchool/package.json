@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node server/index.js",
+    "start": "npm i&&babel-node server/index.js",
+    "startWithoutNPM": "babel-node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "parcel-start": "parcel index.html"
   },

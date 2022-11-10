@@ -1,8 +1,5 @@
 import React from "react";
-import { StdButton, StdInputDropDownOption } from "./common";
 import { StdInput } from "./input";
-
-import placeHolderUser from "../Assets/placeholderUser.png";
 
 export class ExpandableRow extends React.Component {
   constructor(props) {
@@ -51,13 +48,17 @@ export class ExpandableRow extends React.Component {
         onMouseUp={this.handleButtonRelease}
         onMouseLeave={this.handleButtonRelease}
       >
-        <div className={this.state.rowClasses} onClick={this.expand}  style={{"--Columns": this.props.headers.length}}>
-          {this.props.headers.map((cell, secIndex) => {
+        <div className={this.state.rowClasses} onClick={this.expand}  style={{"--Columns": Object.keys(this.props.headers).length}}>
+          {/* {this.props.headers.map((cell, secIndex) => {
             return (
               <Cell width={"100%"} key={secIndex}>
                 {this.props.values[cell]}
               </Cell>
             );
+          })}
+           */}
+          {Object.keys(this.props.headers).map((key, index) => {
+            return <Cell width={"100%"} key={index}>{this.props.values[key]}</Cell>
           })}
         </div>
         {this.state.expanded ? (

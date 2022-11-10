@@ -77,12 +77,20 @@ exports.settings = async (req, res) => {
     const columnSettings = {
         // Configures the headers of the table
         // Pls match header names with column names (case sensitive!)
-        headers: [
-            "uid",
-            "username",
-            "role",
-            "password"
-        ]
+        headers: {
+            "uid":{
+                displayHeader: "User ID",
+            },
+            "username":{
+                displayHeader: "Username",
+            },
+            "role":{
+                displayHeader: "Role",
+            },
+            "password":{
+                displayHeader: "Password",
+            }
+        }
     }
 
     const fieldSettings = {
