@@ -402,7 +402,7 @@ export class StdInput extends React.Component {
                 this.handleSave(this.state.newValue);
               }}
             >
-              <i class="bi bi-check-circle"></i>
+              <i className="bi bi-check-circle"></i>
             </div>
           )}
           <div className={this.state.feedbackClass} onAnimationEnd={this.reset}>

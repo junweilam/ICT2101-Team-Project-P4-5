@@ -116,7 +116,7 @@ export default class Details extends React.Component {
                         <DetailsTableHeader
                             headerQuickActions={
                                 [
-                                    { onClick: () => { }, icon: <i class="bi bi-arrow-clockwise"></i>, title: "Refresh" },
+                                    { onClick: () => { }, icon: <i className="bi bi-arrow-clockwise"></i>, title: "Refresh" },
                                 ]
                             }
                             actions={[

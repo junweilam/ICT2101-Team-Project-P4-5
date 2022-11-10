@@ -1,12 +1,16 @@
 const express = require("express");
 
-const routes = require("../controller/jobRejectionRequestController.js");
+const routes = require("../controller/unavailabilitiesController.js");
 
 const router = express.Router();
 
-router.post("/allRequest", routes.allRequests);
+router.post("/allUnavailabilities", routes.allUnavailabilities);
+
+router.post("/allUnavailabilitiesForUser", routes.allUnavailabilitiesForUser);
 
 router.post("/create", routes.create);
+
+router.post("/toggle", routes.toggle);
 
 router.post("/delete", routes.delete);
 

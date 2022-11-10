@@ -19,8 +19,8 @@ exports.allUsersOfRole = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-    const {username, password, role} = req.body;
-    knex.insert({username: username, password: SHA256(password), role: (role? role :  "staff")}).into("Users").then(data =>{
+    const {username, name, password, role} = req.body;
+    knex.insert({username: username, name: name, password: SHA256(password), role: (role? role :  "staff")}).into("Users").then(data =>{
         knex.select("*").from("Users").where({username:username}).then(data =>{
         res.json({success:true, data, message: "User created!"});
         }).catch(err => {
@@ -32,8 +32,8 @@ exports.create = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    const {username} = req.body;
-    knex.delete().from("Users").where({username: username}).then(data =>{
+    const {uid} = req.body;
+    knex.delete().from("Users").where({uid: uid}).then(data =>{
         res.json({success:true, data, message: "User deleted!"});
     }).catch(err => {
         res.json({success:false, message: err.message});
@@ -41,11 +41,12 @@ exports.delete = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-    const {uid, username, password, role} = req.body;
+    const {uid, username,name, password, role} = req.body;
 
     knex.update({
         uid: uid, 
         username:username, 
+        name: name,
         password: password, 
         role: role, 
         }).from("Users").where({uid: uid}).then(data =>{
@@ -84,6 +85,9 @@ exports.settings = async (req, res) => {
             "username":{
                 displayHeader: "Username",
             },
+            "name": {
+                displayHeader: "Name",
+            },
             "role":{
                 displayHeader: "Role",
             },
@@ -105,6 +109,11 @@ exports.settings = async (req, res) => {
             type: "text",
             editable:true,
             displayLabel: "Username",
+        },
+        "name":{
+            type: "text",
+            editable:true,
+            displayLabel: "Name",
         },
         "password":{
             type: "password",

@@ -1,21 +1,56 @@
 import moment from "moment"
 import React from "react"
+import { AppPageContainer,Loading } from "../../Components/appCommon"
 import { MonthView, WeekView } from "../../Components/common"
 
 export default class staffLanding extends React.Component{
+
+    state={
+        loading:true
+    }
+
+    componentDidMount = async() =>{
+        await this.getJobs().then((jobs)=>{
+            console.log(jobs);
+            this.setState({
+                jobs:jobs.data,
+            });
+        })
+
+        this.setState({
+            loading:false,
+        })
+    }
+
+    getJobs = async() =>{
+        return fetch("/jobs/allJobsForStaff", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({uid:this.props.user.data[0].uid}), 
+        }).then(res => {
+            return res.json();
+        })
+    }
+
     render(){
         return(
-            <div className="container-fluid col-lg-6 col-12 justify-content-center">
-                <div className="row gy-4">
-                    <div className="col-12">
-                        <WeekSchedule></WeekSchedule>
-                    </div>
-                    <div className="col-12">
-                        <MonthSchedule></MonthSchedule>
-                    </div>
-                </div>
+            this.state.loading ?
+            <Loading/>
+            :
+            <AppPageContainer nopad={true}>
 
+            <div className="row gy-4">
+                <div className="col-12">
+                    <WeekSchedule data={this.state.jobs}></WeekSchedule>
+                </div>
+                <div className="col-12">
+                    <MonthSchedule></MonthSchedule>
+                </div>
             </div>
+
+        </AppPageContainer>
         )
     }
 }
@@ -23,44 +58,16 @@ export default class staffLanding extends React.Component{
 export class WeekSchedule extends React.Component{
 
     state={
-        items: {
-            "20-09-2022": {
-                "8:00": "BREAK",
-                "8:30":"Lesson 1",
-                "9:00":"Lesson 2",
-                "9:30":"Lesson 3",
-                "10:00":"Lesson 4",
-                "10:30":"Lesson 5",
-                "11:00":"Lesson 6",
-                "11:30":"Lesson 7",
-                "12:00":"Lesson 8",
-                "12:30":"Lesson 9",
-                "13:00":"Lesson 10",
-                "13:30":"Lesson 11",
-                "14:00":"Lesson 12",
-                "14:30":"Lesson 13",
-                "15:00":"Lesson 14",
-                "15:30":"Lesson 15",
-                "16:00":"Lesson 16",
-                "16:30":"Lesson 17",
-                "17:00":"Lesson 18",
-                "17:30":"Lesson 19",
-                "18:00":"Lesson 20",
-                "18:30":"Lesson 21",
-                "19:00":"Lesson 22",
-                "19:30":"Lesson 23",
-                "20:00":"Lesson 24",
-                "20:30":"Lesson 25",
-
-            }
-        }
     }
 
     render(){
         return(
-            <div className={"cardBg"}>
-                <div className="cardHeader">This week's schedule</div>
-                <WeekView items ={this.state.items} cellComponent = {<EventCell></EventCell>}></WeekView>
+            <div className={"card-bg"}>
+                <div className="header">This week's schedule</div>
+                <div className="body">
+
+                    <WeekView timeField={"jobDate"} cellComponent={<EventCell items={this.props.data}></EventCell>}></WeekView>
+                </div>
 
             </div>
         )
@@ -68,9 +75,45 @@ export class WeekSchedule extends React.Component{
 }
 
 export class EventCell extends React.Component{
+
+    state={
+        index: this.props.index,
+        job:{},
+    }
+
+    componentDidUpdate(prevProps){
+        if(prevProps.index !== this.props.index){
+            this.setState({
+                index:this.props.index,
+            })
+            var jobs = this.findJobs();
+            this.setState({
+                job:jobs,
+            })
+        }
+
+    }
+
+    findJobs = () =>{
+        let jobs = this.props.items.find((item)=>{
+            var jobDateTime = moment(item.jobDate,"YYYY-MM-DDTHH:mm").format("YYYY-MM-DD HH:mm");
+            var indexDateTime = moment(this.props.index,"DD-MM-YYYY HH:mm").format("YYYY-MM-DD HH:mm");
+            return jobDateTime === indexDateTime;
+        })
+        return jobs;
+    }
+
+    componentDidMount = () =>{
+        console.log(this.props.index);
+        console.log(this.findJobs());
+    }
     render(){
         return(
-            <div className="event">{this.props.data[this.props.index.time]}</div>
+            this.state.job ? 
+            
+            <div className="event">{this.state.job.jobName}</div>
+            : 
+            <div className="event">-</div>
         )
     }
 }

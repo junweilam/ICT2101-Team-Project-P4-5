@@ -1,17 +1,5 @@
 import React from "react";
-import qr from "../Assets/myQr.png";
-import admin from "../Assets/admin.png";
 import { StdInput } from "../Components/input";
-import { Link } from "react-router-dom";
-import food from "../Assets/food.png";
-import goToRoom from "../Assets/go-to-room.png";
-import customDashboard from "../Assets/custom-dashboard.png";
-import vitalsDashboard from "../Assets/vitals-dashboard.png";
-import printDorm from "../Assets/print-dorm.png";
-import uploadAvatar from "../Assets/upload-avatar.png";
-import logout from "../Assets/logout.png";
-
-import appLogo from "../Assets/app-logo.png";
 import { CalendarView } from "../Components/common";
 
 const testOptions = [

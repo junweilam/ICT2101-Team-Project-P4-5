@@ -1,9 +1,10 @@
 import React from "react";
 import "../styles/Hamburger.scss";
-import footer from "../Assets/footer.png";
 import { Link } from "react-router-dom";
 import { searchSuggestions } from "../Pages/PageLayout";
 import moment from "moment";
+
+import footer from "../Assets/footer.png";
 
 export class DivSpacing extends React.Component {
     state = {
@@ -554,13 +555,13 @@ export class Hamburger extends React.Component {
 
                 <svg className={this.state.classList} viewBox="0 0 100 100" width={this.props.size} height={this.props.size}>
                     <path
-                        class="line top"
+                        className="line top"
                         d="m 30,33 h 40 c 0,0 9.044436,-0.654587 9.044436,-8.508902 0,-7.854315 -8.024349,-11.958003 -14.89975,-10.85914 -6.875401,1.098863 -13.637059,4.171617 -13.637059,16.368042 v 40" />
                     <path
-                        class="line middle"
+                        className="line middle"
                         d="m 30,50 h 40" />
                     <path
-                        class="line bottom"
+                        className="line bottom"
                         d="m 30,67 h 40 c 12.796276,0 15.357889,-11.717785 15.357889,-26.851538 0,-15.133752 -4.786586,-27.274118 -16.667516,-27.274118 -11.88093,0 -18.499247,6.994427 -18.435284,17.125656 l 0.252538,40" />
                 </svg>
                 {this.props.children}
@@ -608,7 +609,7 @@ export class ActionsButton extends React.Component {
             <div className={" " + this.props.className} title={"Actions"} style={this.props.style}>
 
                 <div className={this.state.classList + " text-center"} onClick={this.toggle}>
-                    <i class="bi bi-grid-3x3-gap-fill"></i>
+                    <i className="bi bi-grid-3x3-gap-fill"></i>
                 </div>
                 <div className={this.state.actionsMenuClass}>
 
@@ -730,7 +731,7 @@ export class SearchTags extends React.Component {
                 <div className={"searchTag d-flex align-items-center" + type}>
                     <span>{this.props.children}</span>
                     {this.props.showRemove ?
-                        <div className={"searchTag-delete"} onClick={this.props.onCancelClick} ><i class="bi bi-x"></i></div> : <div />}
+                        <div className={"searchTag-delete"} onClick={this.props.onCancelClick} ><i className="bi bi-x"></i></div> : <div />}
                 </div>
             )
         } else {
@@ -738,8 +739,8 @@ export class SearchTags extends React.Component {
 
                 <div className={"searchTag searchTag-desktop d-flex align-items-center" + type}>
                     {this.props.showRemove ? <div className={"searchTag-deleteOverlay"}>
-                        <i class="bi bi-pencil" onClick={this.props.onEditClick}></i>
-                        <i class="bi bi-x-circle" onClick={this.props.onCancelClick}></i>
+                        <i className="bi bi-pencil" onClick={this.props.onEditClick}></i>
+                        <i className="bi bi-x-circle" onClick={this.props.onCancelClick}></i>
                     </div> : <div />
                     }
 
@@ -898,7 +899,7 @@ export class TagsBox extends React.Component {
                             </div>
                             <div className="text-left deleteBg" >
 
-                                <i class="bi bi-trash3-fill"></i> Delete All
+                                <i className="bi bi-trash3-fill"></i> Delete All
                             </div>
                         </div>
                     </div>
@@ -914,7 +915,7 @@ export class TagsBox extends React.Component {
                         </div>
                         <div className="text-left deleteBg" onClick={this.props.deleteAllTags}>
                             <div className="deleteBtn">
-                                <i class="bi bi-trash3-fill"></i>
+                                <i className="bi bi-trash3-fill"></i>
                                 <span>Delete All</span>
                             </div>
                         </div>
@@ -963,7 +964,7 @@ export class CheckBox extends React.Component {
         return (
             <div className={this.state.className} onClick={this.toggle}>
                 <div className="checkbox-icon">
-                    <i class="bi bi-check"></i>
+                    <i className="bi bi-check"></i>
                 </div>
             </div>
         )
@@ -1044,13 +1045,13 @@ export class MultiStepBox extends React.Component {
 
     nextStep() {
         this.setState({
-            currentStep: this.state.currentStep + 1,
+            currentStep: this.props.currentStep + 1,
         })
     }
 
     prevStep() {
         this.setState({
-            currentStep: this.state.currentStep - 1,
+            currentStep: this.props.currentStep - 1,
         })
     }
 
@@ -1060,18 +1061,29 @@ export class MultiStepBox extends React.Component {
         })
     }
 
+
+    
+    componentDidUpdate(prevProps, prevState){
+        if(prevProps.currentStep !== this.props.currentStep){
+            this.setState({
+                currentStep: this.props.currentStep
+            })
+        }
+    }  
+
     render() {
         return (
             <div className="Multistep-Container">
                 {this.props.children.map((child, index) => {
-                    if (React.isValidElement(child)) {
+                    if (React.isValidElement(child) && index === this.state.currentStep) {
                         return (
                             <div key={index} className={"step " + (index === this.state.currentStep ? "active" : "")}>
                                 {React.cloneElement(child, { nextStep: this.nextStep, prevStep: this.prevStep, setStep: this.setStep })}
                             </div>
                         )
                     } else {
-                        return child
+                        return <div key={index} className={"step  i " + (index === this.state.currentStep ? "active" : "")} nextStep={this.nextStep} prevStep={this.prevStep} setStep={this.setStep}>
+                        </div>
                     }
                 })}
             </div>
@@ -1307,9 +1319,9 @@ export class MonthView extends React.Component{
         return(
             <div className="monthView">
                 <div className="monthView-header">
-                    <IconButton className={"invert"} icon={<i class="bi bi-chevron-double-left"></i>} onClick={this.prevMonth}></IconButton>
+                    <IconButton className={"invert"} icon={<i className="bi bi-chevron-double-left"></i>} onClick={this.prevMonth}></IconButton>
                     {moment(this.props.month).format("MMMM")}
-                    <IconButton className={"invert"} icon={<i class="bi bi-chevron-double-right"></i>} onClick={this.nextMonth}></IconButton>
+                    <IconButton className={"invert"} icon={<i className="bi bi-chevron-double-right"></i>} onClick={this.nextMonth}></IconButton>
                 </div>
                 <div className="monthView-daysHeader">
                     <div className="monthView-dayHeader">Monday</div>
@@ -1323,10 +1335,10 @@ export class MonthView extends React.Component{
                 <div className="monthView-days">
                     {this.state.calendar.map((week, index) => {
                         return (
-                            <div className="monthView-week">
+                            <div className="monthView-week" key={"w-" + index}>
                                 {week.map((day, index) => {
                                     return (
-                                        <div className="monthView-day">
+                                        <div className="monthView-day" key={"d-" + index}>
                                             {day.date}
                                         </div>
                                     )
@@ -1342,8 +1354,9 @@ export class MonthView extends React.Component{
 export class WeekView extends React.Component{
     state={
         calendar:[],
-        currentMonth: moment(),
+        currentWeek: moment(),
         timeSlots: [],
+        nextCounts: 0,
     }
     componentDidMount(){
         const days = this.generateCalendar();
@@ -1382,44 +1395,80 @@ export class WeekView extends React.Component{
     }
 
     generateCalendar = () =>{
-        const startDay = this.state.currentMonth.clone().startOf("week").subtract(1,"day");
+        const startDay = this.state.currentWeek.clone().startOf("week").subtract(1,"day");
 
         var calendar = [];
         var index = startDay.clone();
             calendar = 
                 new Array(7).fill(0).map(
                     function(n, i) {
-                        return {date: index.add(1, 'day').date(), day: index.format("ddd"), month: index.format("MM"), fullDateFormat: index.format("DD-MM-YYYY")};
+                        return {date: index.add(1, 'day').format("D"), day: index.format("ddd"), month: index.format("MM"), fullDateFormat: index.format("DD-MM-YYYY")};
                     }
                 );
         return calendar;
     }
 
     nextWeek = () =>{
-        this.setState({
-            currentMonth: this.state.currentMonth.add(1, "week")
-        })
-        var days = this.generateCalendar();
-        this.setState({
-            calendar: days
-        })
-        if(this.props.nextWeek){
-            this.props.nextWeek();
+        if(this.props.maxNext){
+            var counts = this.state.currentWeek.clone().startOf("week").diff(moment().startOf("week"), "week");
+            console.log(counts);
+            if(counts < this.props.maxNext){
+                this.setState({
+                    currentWeek: this.state.currentWeek.add(1, "week"),
+                })
+                var days = this.generateCalendar();
+                this.setState({
+                    calendar: days
+                })
+                
+                if(this.props.nextWeek){
+                    this.props.nextWeek();
+                }
+            }
+        }else{
+            this.setState({
+                currentWeek: this.state.currentWeek.add(1, "week"),
+            })
+            var days = this.generateCalendar();
+            this.setState({
+                calendar: days
+            })
+            
+            if(this.props.nextWeek){
+                this.props.nextWeek();
+            }
         }
     }
 
     prevWeek = () =>{
-        this.setState({
-            currentMonth: this.state.currentMonth.subtract(1, "week")
-        })
-        var days = this.generateCalendar();
-        this.setState({
-            calendar: days
-        })
-        if(this.props.prevWeek){
-            this.props.prevWeek();
+
+        if(this.props.maxPrev){
+            var counts = this.state.currentWeek.startOf("week").diff(moment().startOf("week"), "week") * -1;
+            console.log(counts);
+            if(counts < this.props.maxNext){
+                this.setState({
+                    currentWeek: this.state.currentWeek.subtract(1, "week")
+                })
+                var days = this.generateCalendar();
+                this.setState({
+                    calendar: days
+                })
+                if(this.props.prevWeek){
+                    this.props.prevWeek();
+                };
+            }
+        }else{
+            this.setState({
+                currentWeek: this.state.currentWeek.subtract(1, "week")
+            })
+            var days = this.generateCalendar();
+            this.setState({
+                calendar: days
+            })
+            if(this.props.prevWeek){
+                this.props.prevWeek();
+            };
         }
-        ;
     }
 
 
@@ -1429,16 +1478,16 @@ export class WeekView extends React.Component{
         return(
             <div className="weekView">
                 <div className="weekView-header">
-                    <IconButton className={"invert"} icon={<i class="bi bi-chevron-double-left"></i>} onClick={this.prevWeek}></IconButton>
-                    {this.state.currentMonth.clone().startOf('week').format("DD MMMM") + " - " + this.state.currentMonth.clone().endOf('week').format("DD MMMM")}
-                    <IconButton className={"invert"} icon={<i class="bi bi-chevron-double-right"></i>} onClick={this.nextWeek}></IconButton>
+                    <IconButton className={"invert"} icon={<i className="bi bi-chevron-double-left"></i>} onClick={this.prevWeek}></IconButton>
+                    {this.state.currentWeek.clone().startOf('week').format("DD MMMM") + " - " + this.state.currentWeek.clone().endOf('week').format("DD MMMM")}
+                    <IconButton className={"invert"} icon={<i className="bi bi-chevron-double-right"></i>} onClick={this.nextWeek}></IconButton>
                 </div>
                 <div className="weekView-week-container">
                         <div className="weekView-weekDays" style={{"--rows": this.state.calendar.length + 1}}>
                             <div className="spacer"></div>
                             {this.state.calendar.map((day, index) => {
                                 return (
-                                    <div className={"weekView-days " + ((day.date === parseInt(moment(new Date()).format("DD")) && day.month === moment(new Date()).format("MM")) ? "active" : "")}>
+                                    <div key={"d-" + index} className={"weekView-days " + ((day.date === parseInt(moment(new Date()).format("DD")) && day.month === moment(new Date()).format("MM")) ? "active" : "")}>
                                         <span className="date">{day.date}</span>
                                         <span className="day">{day.day}</span>
                                     </div>
@@ -1448,43 +1497,40 @@ export class WeekView extends React.Component{
                     <div className="weekView-timeHeader" style={{"--columns" : this.state.timeSlots.length}}>
                         {this.state.timeSlots.map((timeSlot, index) => {
                             return (
-                                <div className="timeSlot">{timeSlot.time}</div>
+                                <div className="timeSlot" key={"t-head-" + index}>{timeSlot.time}</div>
                             )
                         })}
                         <div className="weekView-days">
-                        {this.state.calendar.map((day, index) => {
-                            console.log(this.props.items);
-                            let item = "";
-                            if(this.props.items.hasOwnProperty(day.fullDateFormat)){
-                                item = this.props.items[day.fullDateFormat];
-                                return(
-                                    
-
-                                    <div className="weekView-day" style={{"--columns" : this.state.timeSlots.length}}>
-                                        {this.state.timeSlots.map((timeSlot, index) => {
-                                            return (
-                                                <div className="weekView-timeSlot">
-                                                    {React.cloneElement(this.props.cellComponent, {data:item, index:timeSlot})}
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                )
-                            }else{
-                                
-                                return(
-                                    <div className="weekView-day" style={{"--columns" : this.state.timeSlots.length}}>
-                                        {this.state.timeSlots.map((timeSlot, index) => {
-                                            return (
-                                                <div className="weekView-timeSlot">
-                                                    <div className="event">-</div>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                )
-                            }
+                        {this.state.calendar.map((day, dIndex) => {
+                            // let item = this.props.items.find((item) => 
+                            //     moment(item[this.props.timeField]) === moment(day.fullDateFormat)
+                            // ) 
                             
+                            // item != undefined ? 
+                            // this.props.cellComponent ? 
+                            // React.cloneElement(this.props.cellComponent, {item: item}) :
+                            
+                            // <div className="event">{day.fullDateFormat}</div>
+                            // :
+
+                            // <div className="event">{day.fullDateFormat}</div>
+                            return (
+                                <div className="weekView-day" style={{"--columns" : this.state.timeSlots.length}} key={"d-" + dIndex}>
+                                    {this.state.timeSlots.map((timeSlot, tIndex) => {
+                                    return (
+                                        <div className="weekView-timeSlot" key={"d-"+ dIndex + "-t-" + tIndex}>
+                                            {this.props.cellComponent ? 
+                                            
+                                            React.cloneElement(this.props.cellComponent, {index: moment(day.fullDateFormat + " " + timeSlot.time, "DD-MM-YYYY HH:mm").format("DD-MM-YYYY HH:mm")}) :
+                                            
+                                            <div className="event">-</div>
+                                            }
+                                        </div>
+                                        
+                                    )
+                                })}
+                                </div>
+                            )
                         })}
                         </div>
                     </div>

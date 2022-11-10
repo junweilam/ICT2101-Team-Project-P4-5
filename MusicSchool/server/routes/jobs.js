@@ -1,10 +1,12 @@
 const express = require("express");
 
-const routes = require("../controller/jobRejectionRequestController.js");
+const routes = require("../controller/jobsController.js");
 
 const router = express.Router();
 
-router.post("/allRequest", routes.allRequests);
+router.post("/allJobs", routes.allJobs);
+
+router.post("/allJobsForStaff", routes.allJobsForStaff);
 
 router.post("/create", routes.create);
 

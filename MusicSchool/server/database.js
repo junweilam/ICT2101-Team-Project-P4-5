@@ -30,6 +30,7 @@ knex.schema
         .createTable("Users", (table) => {
           table.increments("uid").primary();
           table.string("username").unique();
+          table.string("name");
           table.string("password");
           table.string("role");
         })
@@ -104,11 +105,11 @@ knex.schema
   });
 
 knex.schema
-  .hasTable("Unavilabilities")
+  .hasTable("Unavailabilities")
   .then((exists) => {
     if (!exists) {
       return knex.schema
-        .createTable("Unavilabilities", (table) => {
+        .createTable("Unavailabilities", (table) => {
           table.integer("uid");
           table.foreign("uid").references("uid").inTable("Users")
           table.datetime("unavailableOn");

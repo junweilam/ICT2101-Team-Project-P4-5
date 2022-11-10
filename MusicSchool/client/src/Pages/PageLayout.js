@@ -356,7 +356,7 @@ class HeaderExpansionPane extends React.Component {
             <div className="p-4 headerExpansionPane">
                 <div className={"panelCloseBtn d-flex justify-content-between align-items-center"}>
                     <h1>{this.props.title}</h1>
-                    <IconButtonWithText className={"invert"} icon={<i class="bi bi-x"></i>} onClick={this.props.handleClose} label={"Close"}></IconButtonWithText>
+                    <IconButtonWithText className={"invert"} icon={<i className="bi bi-x"></i>} onClick={this.props.handleClose} label={"Close"}></IconButtonWithText>
                 </div>
                 {this.props.children}
             </div>
@@ -577,7 +577,7 @@ class TagMacros extends React.Component {
                         Tags
                     </div>
                     <div className="ms-auto col-auto">
-                        <IconButtonWithText className={"invert"} icon={<i class="bi bi-plus-circle-fill"></i>} label={"Add Macro"} onClick={this.toggleAddMode}></IconButtonWithText>
+                        <IconButtonWithText className={"invert"} icon={<i className="bi bi-plus-circle-fill"></i>} label={"Add Macro"} onClick={this.toggleAddMode}></IconButtonWithText>
                     </div>
                 </div>
                 <div className="d-flex flex-nowrap justify-content-between">
@@ -609,7 +609,7 @@ class TagMacros extends React.Component {
                         </TagsBox>
                     </div>
                     <div className="align-items-start">
-                        <IconButton icon={<i class="bi bi-pencil"></i>} className={"invert"} onClick={this.toggleEditMode}></IconButton>
+                        <IconButton icon={<i className="bi bi-pencil"></i>} className={"invert"} onClick={this.toggleEditMode}></IconButton>
                     </div>
                 </div>
             </div>

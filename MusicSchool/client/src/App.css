@@ -1,8 +1,13 @@
 .App {
   text-align: left;
   position:relative;
-  overflow-y: visible;
+  overflow-y: auto;
   overflow-x: clip;
+  height:100%;
+}
+
+#root{
+  height:calc(100vh);
 }
 
 .App-logo {
