@@ -17,6 +17,7 @@ import Studios from './Pages/Studio';
 import Instruments from './Pages/Instruments';
 
 import ManagerLanding from './Pages/manager/manager-landing';
+import JobAllocation from './Pages/manager/jobAllocation';
 
 import StaffLanding from './Pages/staff/staff-landing';
 import Availabilities from './Pages/staff/availabilities';
@@ -89,6 +90,7 @@ export default function App() {
               {token.data[0].role === "manager" &&
               <DrawerSection label={"Modules"}>
                 <DrawerItem label="Home" to={"/"} logo={dashboard}></DrawerItem>
+                <DrawerItem label="Job Allocation" to={"/job-allocation"} logo={dashboard}></DrawerItem>
               </DrawerSection>
               }
             </SlideDrawer>
@@ -120,9 +122,11 @@ export default function App() {
             {token.data[0].role === "manager" &&
             
             <Routes>
-              <Route exact path="/" element={<ManagerLanding  user={token}/>}>
+            <Route exact path="/" element={<ManagerLanding  user={token}/>}>
             </Route>
-              <Route path="/Logout" element={<Logout logout={logout}></Logout>}></Route>
+            <Route exact path="/job-allocation" element = {<JobAllocation user={token}></JobAllocation>}>
+            </Route>
+            <Route path="/Logout" element={<Logout logout={logout}></Logout>}></Route>
             </Routes>
             }
           </header>

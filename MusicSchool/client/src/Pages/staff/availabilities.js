@@ -1,7 +1,19 @@
 import React from "react"
 import { MonthView, WeekView } from "../../Components/common"
+import {EventCell} from "./staff-landing"
 
 export default class Availabilities extends React.Component{
+
+    componentDidMount = async() =>{
+        await this.getAvailabilities()
+    }
+
+    getAvailabilities = async() =>{
+        
+        
+    }
+
+
     render(){
         return(
             <div className="container-fluid col-lg-6 col-12 justify-content-center">
@@ -231,9 +243,30 @@ export class WeekSchedule extends React.Component{
         return(
             <div className={"cardBg"}>
                 <div className="cardHeader">This week's availabilities</div>
-                <WeekView items={this.state.items}></WeekView>
+                <WeekView items={this.state.items} cellComponent = {<AvailabilityCell></AvailabilityCell>}></WeekView>
 
             </div>
+        )
+    }
+}
+
+
+export class AvailabilityCell extends React.Component{
+    state={
+        data: this.props.data,
+
+    }
+    render(){
+        return(
+            
+            <button className="availability-cell">
+                {this.props.data[this.props.index.time]}
+                <div className="availability-cell-dropdown">
+                    <div className="availability-cell-dropdown-item">Available</div>
+                    <div className="availability-cell-dropdown-item">Unavailable</div>
+                </div>
+            </button>
+            
         )
     }
 }

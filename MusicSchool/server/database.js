@@ -103,6 +103,92 @@ knex.schema
     console.error(`There was an error setting up the database: ${error}`);
   });
 
+knex.schema
+  .hasTable("Unavilabilities")
+  .then((exists) => {
+    if (!exists) {
+      return knex.schema
+        .createTable("Unavilabilities", (table) => {
+          table.integer("uid");
+          table.foreign("uid").references("uid").inTable("Users")
+          table.datetime("unavailableOn");
+        })
+        .then(() => {
+          console.log("Table 'Unavilabilities' created");
+        })
+        .catch((error) => {
+          console.error(`There was an error creating table: ${error}`);
+        });
+    }
+  })
+  .then(() => {
+    console.log("done");
+  })
+  .catch((error) => {
+    console.error(`There was an error setting up the database: ${error}`);
+  });
+
+knex.schema
+  .hasTable("Jobs")
+  .then((exists) => {
+    if (!exists) {
+      return knex.schema
+        .createTable("Jobs", (table) => {
+          table.increments("jid").primary();
+          table.string("jobName");
+          table.integer("studioID");
+          table.foreign("studioID").references("sid").inTable("Studios")
+          table.integer("instrumentID");
+          table.foreign("instrumentID").references("iid").inTable("Instruments")
+          table.integer("staffID");
+          table.foreign("staffID").references("uid").inTable("Users")
+          table.datetime("jobDate");
+          table.string("jobStatus");
+        })
+        .then(() => {
+          console.log("Table 'Jobs' created");
+        })
+        .catch((error) => {
+          console.error(`There was an error creating table: ${error}`);
+        });
+    }
+  })
+  .then(() => {
+    console.log("done");
+  })
+  .catch((error) => {
+    console.error(`There was an error setting up the database: ${error}`);
+  });
+
+knex.schema
+  .hasTable("JobRejectionRequest")
+  .then((exists) => {
+    if (!exists) {
+      return knex.schema
+        .createTable("JobRejectionRequest", (table) => {
+          table.increments("jrrid").primary();
+          table.integer("jobID");
+          table.foreign("jobID").references("jid").inTable("Jobs")
+          table.integer("staffID");
+          table.foreign("staffID").references("uid").inTable("Users")
+          table.string("reason");
+          table.string("status");
+        })
+        .then(() => {
+          console.log("Table 'JobRejectionRequest' created");
+        })
+        .catch((error) => {
+          console.error(`There was an error creating table: ${error}`);
+        });
+    }
+  })
+  .then(() => {
+    console.log("done");
+  })
+  .catch((error) => {
+    console.error(`There was an error setting up the database: ${error}`);
+  });
+
 
 // Just for debugging purposes:
 // Log all data in "books" table

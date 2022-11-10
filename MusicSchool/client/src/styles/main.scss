@@ -3427,6 +3427,74 @@ nav {
                     justify-content: flex-start;
                     background-color: white;
                 }
+                
+
+                .availability-cell{
+                    height:50px;
+                    width:100%;
+                    display:flex;
+                    justify-content: flex-start;
+                    padding-left:15px;
+                    align-items: center;
+                    background-color: white;
+                    position: relative;
+                    border: none;
+                    cursor: pointer;
+                    transition: 0.3s linear;
+                    &:hover{
+                        color:white;
+                        background-color: $primary;
+                    }
+                    &:focus{
+                        color:white;
+                        background-color: $primary;
+                        .availability-cell-dropdown{
+                            left:0;
+                            z-index: 1;
+                            display:flex;
+                            flex-direction: column;
+                            width:100%;
+                            align-self: start;
+                            background-color: white;
+                            border:1px solid $chimericBlack;
+                            border-radius: $borderRadius;
+                            box-shadow: 1px 1px whitesmoke;
+                            overflow: hidden;
+                            animation: availabilityDropdown 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+                            .availability-cell-dropdown-item{
+                                padding:15px;
+                                display:flex;
+                                justify-content: flex-start;
+                                transition: 0.3s linear;
+                                color:$chimericBlack;
+                                &:hover{
+                                    background-color: $active;
+                                    color:white;
+                                }
+                            }
+
+                            @keyframes availabilityDropdown {
+                                0%{
+                                    top:0px;
+                                }
+
+                                50%{
+                                    top:65px;
+                                }
+                                100%{
+                                    top:50px;
+                                }
+                                
+                            }
+                        }
+                    }
+
+                    .availability-cell-dropdown{
+                        position: absolute;
+                        display:none;
+
+                    }
+                }
             }
         }
     }

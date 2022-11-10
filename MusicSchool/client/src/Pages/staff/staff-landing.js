@@ -60,12 +60,21 @@ export class WeekSchedule extends React.Component{
         return(
             <div className={"cardBg"}>
                 <div className="cardHeader">This week's schedule</div>
-                <WeekView items ={this.state.items}></WeekView>
+                <WeekView items ={this.state.items} cellComponent = {<EventCell></EventCell>}></WeekView>
 
             </div>
         )
     }
 }
+
+export class EventCell extends React.Component{
+    render(){
+        return(
+            <div className="event">{this.props.data[this.props.index.time]}</div>
+        )
+    }
+}
+
 
 export class MonthSchedule extends React.Component{
     state={

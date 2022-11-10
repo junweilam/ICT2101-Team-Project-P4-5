@@ -1458,11 +1458,13 @@ export class WeekView extends React.Component{
                             if(this.props.items.hasOwnProperty(day.fullDateFormat)){
                                 item = this.props.items[day.fullDateFormat];
                                 return(
+                                    
+
                                     <div className="weekView-day" style={{"--columns" : this.state.timeSlots.length}}>
                                         {this.state.timeSlots.map((timeSlot, index) => {
                                             return (
                                                 <div className="weekView-timeSlot">
-                                                    <div className="event">{item[timeSlot.time]}</div>
+                                                    {React.cloneElement(this.props.cellComponent, {data:item, index:timeSlot})}
                                                 </div>
                                             )
                                         })}
