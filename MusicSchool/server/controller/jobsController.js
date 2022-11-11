@@ -10,7 +10,16 @@ exports.allJobs = async (req, res) => {
 
 exports.allJobsForStaff = async (req, res) => {
     const {uid} = req.body;
-    knex.select("*").from("Jobs").where({staffID: uid}).then(data =>{
+    knex.select("*").from("Jobs")
+    .join(
+        "Users", "Jobs.staffID", "=", "Users.uid"
+    ).join(
+        "Instruments", "Jobs.instrumentID", "=", "Instruments.iid"
+    ).join(
+        "Studio", "Jobs.studioID", "=", "Studio.sid"
+    )
+        
+    .where({staffID: uid}).then(data =>{
         res.json({success:true, data, message: "Jobs fetched!"});
     }).catch(err => {
         res.json({success:false, message: err.message});
@@ -164,4 +173,3 @@ exports.settings = async (req, res) => {
 
     res.json({success:true, settings, message: "Settings fetched!"});
 }
-

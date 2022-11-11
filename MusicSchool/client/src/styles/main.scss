@@ -6,10 +6,10 @@
 }
 
 
-$primary : #a6192e;
-$secondary: #a61951;
-$nav-active: #860518;
-$active: #8fc140;
+$primary : #6700CD;
+$secondary: #cd00cd;
+$nav-active: #4800bf;
+$active: #f5006f;
 $base: #8D9AE9;
 $specific: #3fa0eb;
 $multiple: #7ac5a9;
@@ -191,7 +191,7 @@ $xxl : 1400px;
             background-color: white;
             position:relative;
             border-radius: 50%;
-
+            overflow: hidden;
             img{
                 width: 100%;
                 height: auto;
@@ -2934,7 +2934,7 @@ nav {
         width: 100%;
         display:none;
         opacity: 0;
-        transition: opacity 0.3s ease-in-out 0.1s; 
+        transition: opacity 0.3s ease-in-out; 
     }
 
     >.step.active {
@@ -3295,34 +3295,56 @@ nav {
 }
 
 .monthView{
+    position:relative;
+    @media screen  and (max-width:$sm){
+        .monthView-calendar{
+            overflow-x: auto;
+        }
+
+        .monthView-daysHeader{
+            background-color: $primary;
+            grid-template-columns: repeat(7, minmax(150px,150px)) !important;
+            width: 100%;
+            .monthView-dayHeader{
+                width:100%;
+            }
+        }
+
+        .monthView-week{
+            grid-template-columns: repeat(7, minmax(150px,150px)) !important;
+        }
+    }
+
     .monthView-header{
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin: 15px;
-        margin-left: 0px;
-        margin-right: 0px;
         font-weight: bold;
         font-size: $large-font;
     }
     .monthView-daysHeader{
         display: grid;
         grid-template-columns: repeat(7, 1fr);
-        column-gap: 15px;
-        row-gap: 15px;
-        margin: 15px;
         margin-left: 0px;
         margin-right: 0px;
         font-weight: bold;
         font-size: $medium-font;
         justify-items: center;
+        .monthView-dayHeader{
+            padding: 10px;
+            background-color: $primary;
+            color: white;
+            text-align: center;
+            width: 100%;
+            &.active{
+                background-color: $nav-active;
+            }
+        }
     }
     .monthView-days{
         display: flex;
         flex-direction: column;
-        column-gap: 15px;
-        row-gap: 15px;
-        margin: 15px;
         margin-left: 0px;
         margin-right: 0px;
         font-size: $medium-font;
@@ -3331,19 +3353,17 @@ nav {
         .monthView-week{
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            column-gap: 15px;
-            row-gap: 15px;
             justify-items: center;
-            align-items: center;
+            align-items: stretch;
 
             .monthView-day{
                 padding: 10px;
-                border-radius: $borderRadius;
                 transition: 0.3s linear;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 flex-direction: column;
+                width: 100%;
                 cursor: pointer;
 
                 &:hover{
@@ -3364,26 +3384,57 @@ nav {
 }
 
 .weekView{
+
+    @media screen  and (max-width:$sm){
+        .weekView-week-container{
+        }
+
+        .weekView-weekDays{
+            display:grid;
+            grid-template-columns: 75px repeat(calc(var(--rows) - 1), minmax(75px,75px)) !important;
+            width: 100%;
+            position:sticky;
+            overflow: visible;
+            top: 0;
+            z-index: 2;
+        }
+
+        .weekView-calendar{
+            overflow: auto;
+        }
+
+        .weekView-timeHeader{
+            position:sticky;
+            left:0;
+            z-index: 1;
+        }
+
+        .weekView-days{
+            left:75px;
+            display:grid;
+            grid-template-columns: repeat(var(--columns), minmax(75px,75px)) !important;
+            width: 100%;
+            overflow: visible !important;
+        }
+    }
+
     .weekView-header{
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin: 15px;
-        margin-left: 0px;
-        margin-right: 0px;
         font-weight: bold;
         font-size: $large-font;
     }
     .weekView-timeHeader{
-        flex-grow: 1;
         display: grid;
-        grid-template-columns: repeat(var(--columns), minmax(150px,150px));
-        column-gap: 1px;
-        row-gap: 1px;
+        grid-template-rows: repeat(var(--columns), minmax(0,1fr));
         font-weight: bold;
         font-size: $medium-font;
         overflow: auto;
-        background-color: $primary;
+        background-color: $nav-active;
+        flex-grow: 1;
+        grid-area:timeSlots;
         .timeSlot{
             height:50px;
             display:flex;
@@ -3392,6 +3443,7 @@ nav {
             font-weight: bold;
             font-size: $medium-font;
             padding:15px;
+            width: 100%;
         }
         .weekView-week{
             overflow: hidden;
@@ -3405,40 +3457,69 @@ nav {
                 height:50px;
                 display:flex;
                 align-items: center;
-                justify-content: flex-start;
+                justify-content: center;
                 background-color: white;
+                width: 100%;
+                transition:0.3s linear;
+                &:hover{
+                    cursor: pointer;
+                    background-color: $primary;
+                    color:white;
+                }
             }
         }
-        .weekView-days{
-            display:grid;
-            row-gap: 1px;
-            column-gap: 1px;
-            background-color: $primary;
-        }
+    }
+    .weekView-days{
+        display:grid;
+        row-gap: 1px;
+        column-gap: 1px;
+        grid-template-columns: repeat(var(--columns), minmax(0,1fr));
+        grid-area: slots;
     }
     .weekView-week-container{
         display: inline-flex;
-        column-gap: 15px;
-        row-gap: 15px;
         justify-items: flex-start;
         align-items: flex-start;
         flex-wrap: nowrap;
-        overflow-x: auto;
+        flex-direction: column;
         width:100%;
 
 
+
+        .weekView-calendar{
+            width: 100%;
+            display:grid;
+            grid-template-columns: (75px 1fr);
+            grid-template-areas: 
+            "dayHeader dayHeader"
+            "timeSlots slots";
+            background-color: rgba($primary,0.2);
+            .weekView-days{
+                width: 100%;
+            }
+            max-height: calc(var(--maxRow) * 50px);
+            overflow: auto;
+        }
+
         .weekView-weekDays{
             display:grid;
-            grid-template-rows: repeat(var(--rows), minmax(50px,50px));
+            grid-template-columns: 75px repeat(calc(var(--rows) - 1), minmax(0,1fr));
             column-gap: 1px;
             row-gap: 1px;
-            .weekView-days{
+            width: 100%;
+            background-color: $primary;
+            grid-area: dayHeader;
+            position:sticky;
+            overflow: visible;
+            top: 0;
+            z-index: 2;
+            .weekView-day{
             display:flex;
-            flex-direction:column;
-            justify-content: center;
             align-items: center;
             padding:15px;
-            border-radius: 25px;
+            justify-content: center;
+            align-items: center;
+            color:white;
             span{
                 font-weight: bold;
                 font-size: $large-font;
@@ -3446,9 +3527,9 @@ nav {
                     font-size: $medium-font;
                 }
             }
+
             &.active{
                 background-color: $nav-active;
-                color:white;
             }
             }
         }
@@ -3459,7 +3540,7 @@ nav {
         }
         .weekView-day{
             display:grid;
-            grid-template-columns: repeat(var(--columns),minmax(150px,150px));
+            grid-template-rows: repeat(var(--columns),minmax(0fr,1fr));
             column-gap: 1px;
             row-gap: 1px;
             font-weight: bold;
@@ -3469,8 +3550,15 @@ nav {
                     height:50px;
                     display:flex;
                     align-items: center;
-                    justify-content: flex-start;
+                    justify-content: center;
                     background-color: white;
+                    width: 100%;
+                    transition:0.3s linear;
+                    &:hover{
+                        cursor: pointer;
+                        background-color: $primary;
+                        color:white;
+                    }
                 }
                 
 
@@ -3488,6 +3576,11 @@ nav {
                     transition: 0.3s linear;
 
                     &.active{
+                        background-color: $nav-active;
+                        color:white;
+                    }
+
+                    &:hover{
                         background-color: $nav-active;
                         color:white;
                     }
@@ -3544,5 +3637,94 @@ nav {
     100% {
         transform: translateY(-120vh) rotate(720deg);
         opacity: 0;
+    }
+}
+
+.modalPopUp{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .modal{
+        background-color: white;
+        border-radius: $borderRadius;
+        padding: 15px;
+
+        width:60%;
+        height:60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        max-width: 500px;
+        @media screen and (max-width: $sm){
+            width:90%;
+        }
+        .modal-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            .modal-title{
+                font-weight: bold;
+                font-size: $large-font;
+            }
+            .modal-close{
+                i{
+                    
+                font-size: 2rem;
+                }
+                cursor: pointer;
+            }
+        }
+
+        .alert{
+            width:100%;
+            margin:15px 0px;
+        }
+
+        .modal-body{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            .Multistep-Container{
+                width:100%;
+            }
+            .modal-fields{
+                display:flex;
+                flex-direction: column;
+                justify-content: center;
+                width: 100%;
+                gap:15px;
+            }
+        }
+        .modal-footer{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            .modal-button{
+                width: 100%;
+                height: 40px;
+                border-radius: $borderRadius;
+                border: none;
+                background-color: $nav-active;
+                color: white;
+                font-weight: bold;
+                font-size: $medium-font;
+                cursor: pointer;
+                transition: 0.3s linear;
+                
+            }
+        }
     }
 }

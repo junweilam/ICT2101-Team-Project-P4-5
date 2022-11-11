@@ -47,7 +47,7 @@ export class AppPageContainer extends React.Component{
 
   render(){
     return(
-      <div className={"app-page " + (this.props.nopad? "no-pad" : "")} style={{maxHeight: (this.state.height - 56)}}>
+      <div className={"app-page " + (this.props.nopad? "no-pad" : "")} style={{maxHeight: (this.state.height - 56), gap:(this.props.gap)}}>
         {this.props.children}
 
       </div>

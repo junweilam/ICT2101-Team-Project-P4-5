@@ -81,10 +81,9 @@ export default class Availabilities extends React.Component{
             
             <AppPageContainer nopad={true}>
                 {this.state.error ? <div className="alert alert-danger" role="alert">{this.state.error}</div> : null}
-                <div className="row gy-4">
-                    <div className="col-12">
+                
+                <div className="col-12">
                         <WeekSchedule data={this.state.availabilities} handleAvailabilityUpdate={this.handleAvailabilityUpdate}></WeekSchedule>
-                    </div>
                 </div>
             </AppPageContainer>
         )
@@ -96,7 +95,7 @@ export default class Availabilities extends React.Component{
 export class WeekSchedule extends React.Component{
     render(){
         return(
-            <div className={"card-bg"}>
+            <div className={"card-bg no-pad"}>
                 <div className="header">This week's availabilities</div>
                 <div className="body">
 

@@ -5,6 +5,7 @@ import { searchSuggestions } from "../Pages/PageLayout";
 import moment from "moment";
 
 import footer from "../Assets/footer.png";
+import { Loading } from "./appCommon";
 
 export class DivSpacing extends React.Component {
     state = {
@@ -1264,12 +1265,15 @@ export class MonthView extends React.Component{
     state={
         calendar:[],
         currentMonth: moment(),
+        loading:true,
     }
 
     componentDidMount(){
         const days = this.generateCalendar();
+        console.log(days);
         this.setState({
-            calendar: days
+            calendar: days,
+            loading:false,
         })
     }
 
@@ -1284,7 +1288,14 @@ export class MonthView extends React.Component{
             calendar.push(
                 new Array(7).fill(0).map(
                     function(n, i) {
-                        return {date: index.add(1, 'day').date()};
+                        return {
+                            date: index.add(1, 'day').date(), 
+                            fullDateFormat: index.format("YYYY-MM-DD"), 
+                            month: index.format("MM"),
+                            day: index.format("DD"), 
+                            year: index.format("YYYY"), 
+                            dayOfWeek: index.format("ddd")
+                        }
                     }
                 )
             );
@@ -1317,34 +1328,50 @@ export class MonthView extends React.Component{
 
     render(){
         return(
+            this.state.loading ? 
+            <Loading></Loading>
+            :
             <div className="monthView">
                 <div className="monthView-header">
                     <IconButton className={"invert"} icon={<i className="bi bi-chevron-double-left"></i>} onClick={this.prevMonth}></IconButton>
-                    {moment(this.props.month).format("MMMM")}
+                    {moment(this.state.currentMonth).format("MMMM YYYY")}
                     <IconButton className={"invert"} icon={<i className="bi bi-chevron-double-right"></i>} onClick={this.nextMonth}></IconButton>
                 </div>
-                <div className="monthView-daysHeader">
-                    <div className="monthView-dayHeader">Monday</div>
-                    <div className="monthView-dayHeader">Tuesday</div>
-                    <div className="monthView-dayHeader">Wednesday</div>
-                    <div className="monthView-dayHeader">Thursday</div>
-                    <div className="monthView-dayHeader">Friday</div>
-                    <div className="monthView-dayHeader">Saturday</div>
-                    <div className="monthView-dayHeader">Sunday</div>
-                </div>
-                <div className="monthView-days">
-                    {this.state.calendar.map((week, index) => {
-                        return (
-                            <div className="monthView-week" key={"w-" + index}>
-                                {week.map((day, index) => {
-                                    return (
-                                        <div className="monthView-day" key={"d-" + index}>
-                                            {day.date}
-                                        </div>
-                                    )
-                                })}
+                <div className="monthView-calendar">
+                    <div className="monthView-daysHeader">
+                    {this.state.calendar[0].map((day, index) => {
+                            return (
+                                <div key={"d-" + index} className={"monthView-dayHeader " + (moment(day.fullDateFormat,"DD-MM-YYYY").format("DD-MM-YYYY") == moment(new Date()).format("DD-MM-YYYY") ? "active" : "")}>
+                                    <span className="day">{day.dayOfWeek}</span>
                                 </div>
-                        )})}
+                            )
+                        })}
+
+                    </div>
+                    <div className="monthView-days">
+                        {this.state.calendar.map((week, index) => {
+                            return (
+                                <div className="monthView-week" key={"w-" + index}>
+                                    {week.map((day, index) => {
+                                        return (
+                                            this.props.cellComponent ? 
+                                            
+                                            <div className="monthView-day" key={"d-" + index}>
+                                                {React.cloneElement(this.props.cellComponent, {
+                                                    index: day.fullDateFormat , key: "d-" + index,
+                                                    currentMonth: this.state.currentMonth.clone().format("MM"),
+                                                })}                                               
+                                            </div>    
+                                            :
+                                            
+                                            <div className="monthView-day" key={"d-" + index}>
+                                                {day.date}
+                                            </div>
+                                        )
+                                    })}
+                                    </div>
+                            )})}
+                    </div>
                 </div>
             </div>
         )
@@ -1471,6 +1498,11 @@ export class WeekView extends React.Component{
         }
     }
 
+    handleScroll = (e) => {
+        console.log(e.target.scrollTop);
+        this.refs["dateHeader"].scrollLeft = e.target.scrollLeft;
+        
+    }
 
 
 
@@ -1483,55 +1515,45 @@ export class WeekView extends React.Component{
                     <IconButton className={"invert"} icon={<i className="bi bi-chevron-double-right"></i>} onClick={this.nextWeek}></IconButton>
                 </div>
                 <div className="weekView-week-container">
-                        <div className="weekView-weekDays" style={{"--rows": this.state.calendar.length + 1}}>
+                    <div className="weekView-calendar" style={{"--maxRow": this.props.maxTimeSlot}}>
+                        <div className="weekView-weekDays" style={{"--rows": this.state.calendar.length + 1}} ref={"dateHeader"}>
                             <div className="spacer"></div>
                             {this.state.calendar.map((day, index) => {
                                 return (
-                                    <div key={"d-" + index} className={"weekView-days " + ((day.date === parseInt(moment(new Date()).format("DD")) && day.month === moment(new Date()).format("MM")) ? "active" : "")}>
-                                        <span className="date">{day.date}</span>
+                                    <div key={"d-" + index} className={"weekView-day " + (moment(day.fullDateFormat,"DD-MM-YYYY").format("DD-MM-YYYY") == moment(new Date()).format("DD-MM-YYYY") ? "active" : "")}>
                                         <span className="day">{day.day}</span>
                                     </div>
                                 )
                             })}
                         </div>
-                    <div className="weekView-timeHeader" style={{"--columns" : this.state.timeSlots.length}}>
+                        <div className="weekView-timeHeader" style={{"--columns" : this.state.timeSlots.length}}>
                         {this.state.timeSlots.map((timeSlot, index) => {
                             return (
                                 <div className="timeSlot" key={"t-head-" + index}>{timeSlot.time}</div>
                             )
                         })}
-                        <div className="weekView-days">
-                        {this.state.calendar.map((day, dIndex) => {
-                            // let item = this.props.items.find((item) => 
-                            //     moment(item[this.props.timeField]) === moment(day.fullDateFormat)
-                            // ) 
-                            
-                            // item != undefined ? 
-                            // this.props.cellComponent ? 
-                            // React.cloneElement(this.props.cellComponent, {item: item}) :
-                            
-                            // <div className="event">{day.fullDateFormat}</div>
-                            // :
-
-                            // <div className="event">{day.fullDateFormat}</div>
-                            return (
-                                <div className="weekView-day" style={{"--columns" : this.state.timeSlots.length}} key={"d-" + dIndex}>
-                                    {this.state.timeSlots.map((timeSlot, tIndex) => {
-                                    return (
-                                        <div className="weekView-timeSlot" key={"d-"+ dIndex + "-t-" + tIndex}>
-                                            {this.props.cellComponent ? 
-                                            
-                                            React.cloneElement(this.props.cellComponent, {index: moment(day.fullDateFormat + " " + timeSlot.time, "DD-MM-YYYY HH:mm").format("DD-MM-YYYY HH:mm")}) :
-                                            
-                                            <div className="event">-</div>
-                                            }
-                                        </div>
-                                        
-                                    )
-                                })}
-                                </div>
-                            )
-                        })}
+                        </div>
+                        <div className="weekView-days" style={{"--columns" : this.state.calendar.length}} onScroll={this.handleScroll}>
+                            {this.state.calendar.map((day, dIndex) => {
+                                return (
+                                    <div className="weekView-day" style={{"--columns" : this.state.timeSlots.length}} key={"d-" + dIndex}>
+                                        {this.state.timeSlots.map((timeSlot, tIndex) => {
+                                        return (
+                                            <div className="weekView-timeSlot" key={"d-"+ dIndex + "-t-" + tIndex}>
+                                                {this.props.cellComponent ? 
+                                                
+                                                React.cloneElement(this.props.cellComponent, {
+                                                    index: moment(day.fullDateFormat + " " + timeSlot.time, "DD-MM-YYYY HH:mm").format("DD-MM-YYYY HH:mm"),
+                                                }) :
+                                                
+                                                <div className="event">-</div>
+                                                }
+                                            </div>
+                                        )
+                                    })}
+                                    </div>
+                                )
+                            })}
                         </div>
                     </div>
                 </div>

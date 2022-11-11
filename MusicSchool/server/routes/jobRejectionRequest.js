@@ -6,6 +6,8 @@ const router = express.Router();
 
 router.post("/allRequest", routes.allRequests);
 
+router.post("/getRequestsByJobIDandStaffID", routes.getRequestsByJobIDandStaffID);
+
 router.post("/create", routes.create);
 
 router.post("/delete", routes.delete);

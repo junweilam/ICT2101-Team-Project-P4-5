@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { MultiStepBox, StdButton} from "../Components/common";
 import { StdInput } from "../Components/input";
 
-import ttshlogo from "../Assets/ttshlogo.png";
+import museLogo from "../Assets/MUSE.png";
 
 const loginSteps = {0: "login", 1: "register",2: "forgot"}
 
@@ -197,7 +197,7 @@ export default class Login extends React.Component {
                 <li></li>
               </ul>}
               <div className="logoContainer">
-                <img src={ttshlogo} alt="logo" />
+                <img src={museLogo} alt="logo" />
               </div>
               <div className="logoCaption">
                 <h1>

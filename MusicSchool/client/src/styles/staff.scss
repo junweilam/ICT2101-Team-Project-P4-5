@@ -1,0 +1,146 @@
+@import "main.scss";
+
+.staff-landing-overview{
+    width: 100%;
+    display:grid;
+    grid-template-areas: 
+        "week-hours upcoming"
+        "month-hours upcoming"
+        ;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap:10px;
+
+    .hour-label{
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $primary;
+    }
+    .hour-bar{
+        width: 100%;
+        height: 20px;
+        background: $base;
+        border-radius: 5px;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 600;
+        position:relative;
+
+        &:after{
+            content: "";
+            width: 100%;
+            height: 100%;
+            background: $primary;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 5px;
+            transform: scaleX(var(--scaleVal));
+            transform-origin: left;
+        }
+    }
+    .week-hours{
+        grid-area: week-hours;
+       
+        .body{
+            height: 100%;
+            display:flex;
+            align-items: flex-start;
+            gap: 15px;
+            justify-content: center;
+            flex-direction: column;
+        }
+    }
+    .month-hours{
+        grid-area: month-hours;
+        
+        .body{
+            height: 100%;
+            display:flex;
+            align-items: flex-start;
+            gap: 15px;
+            justify-content: center;
+            flex-direction: column;
+        }
+    }
+
+    .upcoming{
+        grid-area: upcoming;
+        height:100%;
+
+        .body{
+            max-height: calc(6 * 52px);
+            min-height: calc(6 * 52px);
+            overflow-y: auto;
+        }
+        .job-list-tile{
+            padding:10px;
+            padding-left: 15px;
+            min-height: 46px;
+            transition: 0.3s ease-in-out;
+
+            &:hover{
+                background-color: rgba($primary, 0.1);
+                cursor: pointer;
+            }
+
+            &:not(:last-child){
+                border-bottom: 1px solid $primary;
+            }
+
+            display:flex;
+            flex-direction: column;
+            gap:5px;
+
+            .tile-title{
+                font-size: 1rem;
+                font-weight: bold;
+                color:$primary;
+                text-overflow: ellipsis;
+            }
+            .tile-datetime{
+                font-size: 0.8rem;
+            }
+        }
+    }
+}
+
+
+.month-day-cell{
+    width: 100%;
+    display:flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 100%;
+    gap:5px;
+
+    .cell-date-number{
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $primary;
+        padding:5px;
+        border-radius: 3px;
+        background-color: rgba($primary, 0.1);
+
+        &.nextprevMth{
+            color:$chimericBlack;
+            background-color: rgba($chimericBlack, 0.1);
+
+            ~.cell-jobcount{
+                background-color: rgba($chimericBlack, 0.1);
+
+            }
+        }
+    }
+
+    .cell-jobcount{
+        width: 100%;
+        font-size: 0.9rem;
+        padding:7.5px;
+        font-weight: 600;
+        background-color: rgba($primary, 0.1);
+    }
+}

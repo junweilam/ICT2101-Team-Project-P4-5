@@ -9,23 +9,39 @@ exports.allRequests = async (req, res) => {
     });
 }
 
-exports.create = async (req, res) => {
-    const {jobID, staffID, reason} = req.body;
-    knex.insert({
-        jobID: jobID,
-        staffID: staffID,
-        reason: reason,
-        status: "Pending",
-        requestCreatedOn: moment().format('YYYY-MM-DD HH:mm:ss'),
-    }).into("JobRejectionRequest").then(data =>{
-        knex.select("*").from("JobRejectionRequest").where({jid:jid}).then(data =>{
-        res.json({success:true, data, message: "JobRejectionRequest created!"});
-        }).catch(err => {
-            res.json({success:false, message: err.message});
-        })
+exports.getRequestsByJobIDandStaffID = async (req, res) => {
+    const {jobID, staffID} = req.body;
+    knex.select("*").from("JobRejectionRequest").where({jobID: jobID, staffID: staffID}).then(data =>{
+        res.json({success:true, data, message: "JobRejectionRequests fetched!"});
     }).catch(err => {
         res.json({success:false, message: err.message});
     });
+}
+
+exports.create = async (req, res) => {
+    const {jobID, staffID, reason} = req.body;
+    // check if jobID and staffID exists
+    knex.select("*").from("JobRejectionRequest").where({jobID: jobID, staffID: staffID}).then(data =>{
+        if(data.length > 0){
+            return res.json({success:false, message: "Job Rejection Request already exists!"});
+        }else{
+            knex.insert({
+                jobID: jobID,
+                staffID: staffID,
+                reason: reason,
+                status: "Pending",
+                requestCreatedOn: moment().format('YYYY-MM-DD HH:mm:ss'),
+            }).into("JobRejectionRequest").then(data =>{
+                knex.select("*").from("JobRejectionRequest").where({jobID:jobID,staffID: staffID}).then(data =>{
+                res.json({success:true, data, message: "JobRejectionRequest created!"});
+                }).catch(err => {
+                    res.json({success:false, message: err.message});
+                })
+            }).catch(err => {
+                res.json({success:false, message: err.message});
+            });
+        }
+    })
 }
 
 exports.delete = async (req, res) => {
@@ -58,14 +74,14 @@ exports.update = async (req, res) => {
 
 exports.settings = async (req, res) => {
     var joblist = [];
-    knex.select("*").from("Jobs").then(data =>{
+    await knex.select("*").from("Jobs").then(data =>{
         data.map((job) => {
             return joblist.push({value:job.jid, label:job.jobName});
         })
     })
 
     var stafflist = [];
-    knex.select("*").from("Users").where({role:"staff"}).then(data =>{
+    await knex.select("*").from("Users").where({role:"staff"}).then(data =>{
         data.map((staff) => {
             return stafflist.push({value:staff.uid, label:staff.name});
         })
@@ -94,30 +110,30 @@ exports.settings = async (req, res) => {
     const fieldSettings = {
         "jrrid":{
             type: "number",
-            label: "Job Rejection Request ID",
+            displayLabel: "Job Rejection Request ID",
             enabled: false,
             primaryKey: true
         },
         "jobID":{
             type: "dropdown",
-            label: "Job ID",
+            displayLabel: "Job ID",
             enabled: true,
             options: joblist,
         },
         "staffID":{
             type: "dropdown",
-            label: "Staff ID",
+            displayLabel: "Staff ID",
             enabled: true,
             options: stafflist,
         },
         "reason":{
             type: "text",
-            label: "Reason",
+            displayLabel: "Reason",
             enabled: true,
         },
         "status":{
             type: "dropdown",
-            label: "Status",
+            displayLabel: "Status",
             enabled: true,
             options: [
                 {value:"Pending", label:"Pending"},
@@ -127,12 +143,12 @@ exports.settings = async (req, res) => {
         },
         "requestCreatedOn":{
             type: "datetime",
-            label: "Request Created On",
+            displayLabel: "Request Created On",
             enabled: false,
         },
         "requestUpdatedOn":{
             type: "datetime",
-            label: "Request Updated On",
+            displayLabel: "Request Updated On",
             enabled: false,
         },
     }
