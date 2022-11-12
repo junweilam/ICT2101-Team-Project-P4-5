@@ -48,13 +48,11 @@ export class Backdrop extends React.Component {
 }
 
 export class DrawerItem extends React.Component {
+  state = {
+    currentActive: this.props.currentActive
+  }
   constructor(props){
     super(props);
-    if(this.props.type === "active"){
-      this.state = {
-        classType: "active"
-      }
-    }
     if(this.props.type === "favourite"){
       this.state = {
         classType : "favourite"
@@ -66,12 +64,35 @@ export class DrawerItem extends React.Component {
       }
     }
   }
+
+  componentDidUpdate(prevProps){
+      if(prevProps.currentActive !== this.props.currentActive){
+        this.setState({
+          currentActive: this.props.currentActive
+        })
+
+        if(this.props.currentActive === this.props.label){
+          this.setState({
+            classType: "active"
+          })
+        }else{
+          this.setState({
+            classType: ""
+          })
+        }
+      }
+  }
+  
+  handleOnClick=()=>{
+    console.log("clicked")
+    this.props.setActive?.(this.props.label);
+  }
   render() {
 
     return (
-      <Link className={"drawerItem"} to={this.props.to} style={{ minWidth: this.props.width, maxWidth: this.props.width }} onClick={this.props.onClick}>
+      <Link className={"drawerItem"} to={this.props.to} style={{ minWidth: this.props.width, maxWidth: this.props.width }} onClick={this.handleOnClick}>
         {this.props.logo != undefined ?
-          <img className={this.state.classType} src={this.props.logo} width={"56px"} height={"56px"}></img> : <></>}
+          <img className={'drawerItem-logo ' + this.state.classType} src={this.props.logo} width={"56px"} height={"56px"}></img> : <></>}
         {this.props.label}
       </Link>
     )

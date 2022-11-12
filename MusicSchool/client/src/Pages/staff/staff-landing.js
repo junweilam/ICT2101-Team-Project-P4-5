@@ -214,6 +214,10 @@ export class EventCell extends React.Component{
     }
 
     componentDidMount = () =>{
+        var jobs = this.findJobs();
+        this.setState({
+            job:jobs,
+        })
     }
     render(){
         return(

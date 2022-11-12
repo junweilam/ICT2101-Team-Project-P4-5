@@ -1,11 +1,5 @@
 // Drawer
-
-
-
-$primary : #48a1da;
-$secondary: #4858da;
-$active: #8fc140;
-$chimericBlack: #606060;
+@import "main.scss";
 
 @keyframes scale-out {
     from {
@@ -125,7 +119,7 @@ $columns: 5;
         width: 42px;
         height: 42px;
         padding: 7.5px;
-        background-color: #4b8cf7;
+        background-color: $primary;
         border-radius: 4px;
         transition: 0.3s;
         margin:7.5px;
@@ -136,18 +130,18 @@ $columns: 5;
         }
         &.active {
             background-color:
-                $active;
+                $nav-active;
         }
     }
 
     &:hover {
         background-color: rgba(#eee,0.6);
         transition-duration: 0.3s;
-        color: #8bbf39;
+        color: $active;
         cursor: pointer;
         
         img {
-            background-color: #8bbf39;
+            background-color: $active;
             transition: 0.3s;
         }
     }
