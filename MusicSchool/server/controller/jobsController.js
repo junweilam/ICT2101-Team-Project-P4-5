@@ -27,13 +27,14 @@ exports.allJobsForStaff = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-    const {jobName, studioID, instrumentID, staffID, jobDate} = req.body;
+    const {jobName, studioID, instrumentID, staffID, jobDate,jobStatus} = req.body;
     knex.insert({
         jobName: jobName,
         studioID: studioID,
         instrumentID: instrumentID,
         staffID: staffID,
         jobDate: jobDate,
+        jobStatus: jobStatus,
     }).into("Jobs").then(data =>{
         knex.select("*").from("Jobs").where({title:title}).then(data =>{
         res.json({success:true, data, message: "Job created!"});
@@ -55,7 +56,7 @@ exports.delete = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-    const {jid, jobName, studioID, instrumentID, staffID, jobDate} = req.body;
+    const {jid, jobName, studioID, instrumentID, staffID, jobDate,jobStatus} = req.body;
 
     knex.update({
         jid: jid,
@@ -64,6 +65,7 @@ exports.update = async (req, res) => {
         instrumentID: instrumentID,
         staffID: staffID,
         jobDate: jobDate,
+        jobStatus: jobStatus,
         }).from("Jobs").where({jid: jid}).then(data =>{
         knex.select("*").from("Jobs").then(data =>{ 
             return res.json({success:true, data, message: "Jobs fetched!"});
@@ -123,43 +125,43 @@ exports.settings = async (req, res) => {
         jid: {
             displayLabel: "Job ID",
             type: "text",
-            enabled: true,
+            editable: true,
             primaryKey: true,
         },
         jobName: {
             displayLabel: "Job Name",
             type: "text",
-            enabled: true,
+            editable: true,
         },
         studioID: {
             displayLabel: "Studio",
             type: "dropdown",
-            enabled: true,
+            editable: true,
             options: studios,
         },
         instrumentID: {
             displayLabel: "Instrument",
             type: "dropdown",
-            enabled: true,
+            editable: true,
             options: instruments,
         },
         staffID: {
             displayLabel: "Staff",
             type: "dropdown",
-            enabled: true,
+            editable: true,
             options: staff,
         },
         jobDate: {
             displayLabel: "Job Date",
             type: "datetime",
-            enabled: true,
+            editable: true,
         },
         jobStatus: {
             displayLabel: "Job Status",
             type: "dropdown",
-            enabled: true,
+            editable: true,
             options: [
-                {label: "Pending", value: "pending"},
+                {label: "Assigned", value: "Assigned"},
                 {label: "In Progress", value: "in progress"},
                 {label: "Completed", value: "completed"},
             ]

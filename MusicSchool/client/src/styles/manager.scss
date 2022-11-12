@@ -1,0 +1,107 @@
+@import "main.scss";
+
+.staff-extended{
+    margin:15px 0px ;
+}
+
+.manager-landing-header{
+    display:grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    grid-template-areas: 
+    "top-three requests"
+    "bottom-three requests";
+    gap: 15px;
+    margin:0px 0px 15px 0px;
+    .manager-top-three{
+        &.top{
+            grid-area: top-three;
+        }
+        &.bottom{
+            grid-area: bottom-three;
+        }
+        .staff-item{
+            &:nth-child(odd){
+                background-color: rgba($primary, 0.1);
+            }
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            padding:7.5px;
+            .staff-item-name{
+                font-size: 1.2rem;
+                color:$primary;
+            }
+
+            .staff-item-hours{
+                font-size: 0.8rem;
+                color:$chimericBlack;
+                font-weight: bold;
+            }
+        }
+    }
+
+    .requests {
+        
+        grid-area: requests;
+
+        @media screen and (max-width: $sm) {
+            .rq{
+                display:none;
+            }
+        }
+
+        .header{
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0px 15px;
+            height:46px;
+            .requestCount{
+                color:$primary;
+                background-color: white;
+                border-radius: 10px;
+                padding:7.5px;
+                font-weight: bold;
+            }
+        }
+
+        .request-item{
+            display:flex;
+            flex-direction: column;
+            gap:5px;
+            padding: 7.5px 15px;
+            transition: 0.3s ease-in-out;
+
+            &:nth-child(odd){
+                background-color: rgba($primary, 0.1);
+            }
+            .request-item-name{
+                font-weight: bold;
+                color:$primary
+            }
+
+            .request-first-row{
+                display:flex;
+
+                .request-item-name{
+                    flex-grow: 1;
+                    text-overflow: ellipsis;
+                }
+
+                .request-item-status{
+                    min-width: 50px;
+                }
+            }
+
+            .request-item-status{
+                font-weight: bold;
+
+            }
+
+            &:hover{
+                background-color: rgba($primary, 0.2);
+                cursor: pointer;
+            }
+        }
+    }
+}

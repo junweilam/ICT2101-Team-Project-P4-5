@@ -377,6 +377,7 @@ export class StdInput extends React.Component {
               updateValue={this.updateValue}
               value={this.state.newValue}
               options={this.props.options}
+              maxItems = {this.props.maxItems}
             ></StdDropDownBox>
           )}
 
@@ -422,7 +423,7 @@ export class StdInput extends React.Component {
                   this.props.options.find(option => option.value == parseInt(this.props.value)).label 
                   : 
                   "") 
-              : this.props.options.find(option => option.value == this.props.value)
+              : this.props.options.find(option => option.value == this.props.value).label
             : this.props.value
             }
             </div>
@@ -1008,7 +1009,7 @@ class StdDropDownBox extends React.Component {
           value={this.state.newValue}
         ></input>
         <div className="dropdownWrapper">
-          <div className="dropdown">
+          <div className="dropdown" style={{"--maxItems": this.props.maxItems}}>
           {this.props.options.map((option,index) => {
             return <div className="dropdownOptions" key={index} onClick ={()=>this.dropdownSelect(option)}>{option.label}</div>;
           })}

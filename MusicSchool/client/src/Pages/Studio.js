@@ -2,6 +2,7 @@
 import React from "react"
 import { ListMapperView } from "../Components/common"
 import DatapageLayout from "./PageLayout"
+import { Loading } from "../Components/appCommon"
 
 export default class Studios extends React.Component {
     state={
@@ -128,12 +129,11 @@ export default class Studios extends React.Component {
         })
     }
 
-    render(){
-        if(this.state.loading){
-            return <div>Loading</div>
-        }else{
-            
+    render(){ 
         return(
+            this.state.loading?
+            <Loading/>
+            :
             <DatapageLayout 
                 settings={this.settings}
                 fieldSettings={this.state.settings.fieldSettings} 
@@ -144,14 +144,13 @@ export default class Studios extends React.Component {
                 error={this.state.error}>
                 {this.state.content.data.map((item, index) => {
                     return(
-                        <div> <InstrumentList settings={this.state.settings} data={this.state.instruments.data} sid={item.sid}/>
-                    </div>
+                        <div> 
+                            <InstrumentList settings={this.state.settings} data={this.state.instruments.data} sid={item.sid}/>
+                        </div>
                     ) 
                 })}
             </DatapageLayout>
-            
-            )
-        }
+        )
     }
 }
 

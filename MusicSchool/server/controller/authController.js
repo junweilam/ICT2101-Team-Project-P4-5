@@ -1,5 +1,6 @@
 const { SHA256 } = require("crypto-js");
 const knex = require("../database.js");
+const moment = require("moment");
 
 exports.allUsers = async (req, res) => {
     knex.select("*").from("Users").then(data =>{
@@ -10,8 +11,25 @@ exports.allUsers = async (req, res) => {
 }
 
 exports.allUsersOfRole = async (req, res) => {
+    var weekStart = moment().startOf('week').format("YYYY-MM-DDTHH:mm");
+    var weekEnd = moment().endOf('week').format("YYYY-MM-DDTHH:mm");
     const {role} = req.body;
-    knex.select("*").from("Users").where({role: role}).then(data =>{
+    knex.select("*").from("Users")
+    .leftJoin( knex.select(["staffID",]).from("Jobs")
+    .count("staffID as count")
+    .groupBy("staffID")
+    .whereBetween("jobDate",[weekStart,weekEnd])
+    .as("Jobs"), "Users.uid", "Jobs.staffID")
+    .where({role: role}).orderBy("count","desc").then(data =>{
+        data.forEach((item, index) => {
+            if(item.count == null){
+                data[index].count = 0;
+                data[index].hours = 0;
+            }else{
+                data[index].hours = item.count * 0.5;
+            }
+        })
+
         res.json({success:true, data, message: "Users fetched!"});
     }).catch(err => {
         res.json({success:false, message: err.message});
@@ -115,11 +133,6 @@ exports.settings = async (req, res) => {
             editable:true,
             displayLabel: "Name",
         },
-        "password":{
-            type: "password",
-            editable:false,
-            displayLabel: "Password",
-        },
         "role":{
             type: "dropdown",
             editable:true,
@@ -129,6 +142,11 @@ exports.settings = async (req, res) => {
                 {value: "admin", label: "Admin"},
                 {value: "manager", label: "Manager"}
             ]
+        },
+        "password":{
+            type: "password",
+            editable:false,
+            displayLabel: "Password",
         },
     }
 
@@ -147,12 +165,26 @@ exports.managerSettings = async (req, res) => {
     const columnSettings = {
         // Configures the headers of the table
         // Pls match header names with column names (case sensitive!)
-        headers: [
-            "uid",
-            "username",
-            "role",
-            "hours",
-        ]
+        headers: {
+            "uid":{
+                displayHeader: "User ID",
+            },
+            "username":{
+                displayHeader: "Username",
+            },
+            "name": {
+                displayHeader: "Name",
+            },
+            "role":{
+                displayHeader: "Role",
+            },
+            "count":{
+                displayHeader: "Classes this week",
+            },
+            "hours":{
+                displayHeader: "Hours this week",
+            }
+        }
     }
 
     const fieldSettings = {
@@ -165,8 +197,13 @@ exports.managerSettings = async (req, res) => {
         },
         "username":{
             type: "text",
-            editable:false,
+            editable:true,
             displayLabel: "Username",
+        },
+        "name":{
+            type: "text",
+            editable:true,
+            displayLabel: "Name",
         },
         "role":{
             type: "dropdown",
@@ -178,6 +215,21 @@ exports.managerSettings = async (req, res) => {
                 {value: "manager", label: "Manager"}
             ]
         },
+        "password":{
+            type: "password",
+            editable:false,
+            displayLabel: "Password",
+        },
+        "count":{
+            type: "number",
+            editable:false,
+            displayLabel: "Classes this week",
+        },
+        "hours":{
+            type: "text",
+            editable:false,
+            displayLabel: "Hours this week",
+        }
     }
 
     const settings = {

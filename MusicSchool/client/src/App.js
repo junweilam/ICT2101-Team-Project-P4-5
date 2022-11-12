@@ -25,6 +25,8 @@ import Availabilities from './Pages/staff/availabilities';
 import JobRejectionRequest from './Pages/admin/JobRejectionRequests';
 import Jobs from './Pages/admin/Jobs';
 
+import ManagerLanding from './Pages/manager/manager-landing';
+
 import Unavailabilities from './Pages/admin/unavailabilities';
 /* function getToken() {  
   const tokenString = sessionStorage.getItem('token');
@@ -99,6 +101,12 @@ export default function App() {
                 <DrawerItem label="Logout" to={"/Logout"} logo={logoutImg}></DrawerItem>
               </DrawerSection>
               }
+              {token.data[0].role === "manager" &&
+              <DrawerSection label={"Modules"}>
+                <DrawerItem label="Home" to={"/"} logo={homeImg}></DrawerItem>
+                <DrawerItem label="Logout" to={"/Logout"} logo={logoutImg}></DrawerItem>
+              </DrawerSection>
+              }
             </SlideDrawer>
             
             {token.data[0].role === "admin" &&
@@ -121,6 +129,14 @@ export default function App() {
               <Route exact path="/" element={<StaffLanding  user={token}/>}>
               </Route>
               <Route path="/Availabilities" element={<Availabilities user={token}/>}>
+              </Route>
+              <Route path="/Logout" element={<Logout logout={logout}></Logout>}>
+              </Route>
+            </Routes>
+            }
+            {token.data[0].role === "manager" &&
+            <Routes>
+              <Route exact path="/" element={<ManagerLanding  user={token}/>}>
               </Route>
               <Route path="/Logout" element={<Logout logout={logout}></Logout>}>
               </Route>

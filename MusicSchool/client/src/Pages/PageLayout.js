@@ -886,7 +886,7 @@ export class TableFooter extends React.Component {
     render() {
         return (
             this.props.showBottomMenu ?
-                <ActionsButton className={"fixed-bottom footer-Btn"} onClick={this.props.toggle} style={{ "backgroundColor": this.props.settings.primaryColor, "color": this.props.settings.textColor }}></ActionsButton> : ""
+                <ActionsButton className={"fixed-bottom footer-Btn"} onClick={this.props.toggle}></ActionsButton> : ""
         )
     }
 }

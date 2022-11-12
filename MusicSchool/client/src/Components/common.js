@@ -607,9 +607,9 @@ export class ActionsButton extends React.Component {
 
     render() {
         return (
-            <div className={" " + this.props.className} title={"Actions"} style={this.props.style}>
+            <div className={" " + this.props.className} title={"Actions"} style={this.props.style} onClick={this.toggle}>
 
-                <div className={this.state.classList + " text-center"} onClick={this.toggle}>
+                <div className={this.state.classList + " text-center"}>
                     <i className="bi bi-grid-3x3-gap-fill"></i>
                 </div>
                 <div className={this.state.actionsMenuClass}>

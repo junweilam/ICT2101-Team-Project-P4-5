@@ -9,6 +9,15 @@ exports.allRequests = async (req, res) => {
     });
 }
 
+exports.allRequestsAndJobs = async (req, res) => {
+    knex.select("*").from("JobRejectionRequest")
+    .join("Jobs", "JobRejectionRequest.jobID", "=", "Jobs.jid").then(data =>{
+        res.json({success:true, data, message: "JobRejectionRequests fetched!"});
+    }).catch(err => {
+        res.json({success:false, message: err.message});
+    });
+}
+
 exports.getRequestsByJobIDandStaffID = async (req, res) => {
     const {jobID, staffID} = req.body;
     knex.select("*").from("JobRejectionRequest").where({jobID: jobID, staffID: staffID}).then(data =>{
@@ -55,7 +64,7 @@ exports.delete = async (req, res) => {
 
 exports.update = async (req, res) => {
     const {jrrid, jobID, staffID, reason, status} = req.body;
-
+ console.log(req.body);
     knex.update({
         jrrid: jrrid, 
         jobID: jobID, 
@@ -111,30 +120,30 @@ exports.settings = async (req, res) => {
         "jrrid":{
             type: "number",
             displayLabel: "Job Rejection Request ID",
-            enabled: false,
+            editable: false,
             primaryKey: true
         },
         "jobID":{
             type: "dropdown",
             displayLabel: "Job ID",
-            enabled: true,
+            editable: true,
             options: joblist,
         },
         "staffID":{
             type: "dropdown",
             displayLabel: "Staff ID",
-            enabled: true,
+            editable: true,
             options: stafflist,
         },
         "reason":{
             type: "text",
             displayLabel: "Reason",
-            enabled: true,
+            editable: true,
         },
         "status":{
             type: "dropdown",
             displayLabel: "Status",
-            enabled: true,
+            editable: true,
             options: [
                 {value:"Pending", label:"Pending"},
                 {value:"Approved", label:"Approved"},
@@ -144,12 +153,12 @@ exports.settings = async (req, res) => {
         "requestCreatedOn":{
             type: "datetime",
             displayLabel: "Request Created On",
-            enabled: false,
+            editable: false,
         },
         "requestUpdatedOn":{
             type: "datetime",
             displayLabel: "Request Updated On",
-            enabled: false,
+            editable: false,
         },
     }
 
