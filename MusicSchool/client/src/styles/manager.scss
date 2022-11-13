@@ -65,6 +65,41 @@
             }
         }
 
+        .requests-tabs{
+            display:grid;
+            grid-template-columns: repeat(4, minmax(0,1fr));
+            text-align: center;
+            position:relative;
+
+            .tab{
+                
+                padding:15px 7.5px;
+                position:relative;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                transition: all 0.2s ease-in-out;
+                &:hover{
+                    cursor:pointer;
+                    background-color: rgba($primary, 0.1);
+                }
+                &.active{
+                    &:after{
+                        content: "";
+                        position: absolute;
+                        width: 100%;
+                        height: 2px;
+                        bottom:0px;
+                        left:0px;
+                        background-color: $primary;
+                    }
+                }
+            }
+        }
+
+        .step>div{
+            width: 100%;
+        }
+
         .request-item{
             display:flex;
             flex-direction: column;
@@ -101,6 +136,79 @@
             &:hover{
                 background-color: rgba($primary, 0.2);
                 cursor: pointer;
+            }
+        }
+    }
+}
+
+
+.jobCreation-toggle{
+    margin:10px;
+    background-color: $primary;
+    border-radius: 10px;
+    border:none;
+    color:white;
+    font-weight: bold;
+    position: relative;
+    padding:15px;
+    .jobCreationForm{
+        display:none;
+    }
+
+    &:focus,&:focus-within{
+        .jobCreationForm{
+            padding:15px;
+            color:black;
+            background-color: white;
+            position: relative;
+            display:flex;
+            align-items: stretch;
+            border-radius: 10px;
+            gap: 15px;
+            margin-top: 15px;
+
+            .jobCreationForm-fields{
+                color:black;
+                background-color: white;
+                position: relative;
+                display:grid;
+                grid-template-columns: minmax(0,1fr);
+                gap:10px;
+                text-align: left;
+                max-width: 50%;
+                min-width: 50%;
+            }
+
+            .jobCreationForm-staffSchedule{
+                max-width: 50%;
+                min-width: 50%;
+                display:flex;
+                padding-right: 10px;
+                align-items: center;
+                justify-content: center;
+
+                .card-bg{
+                    width: 100%;
+                }
+
+                .staffSchedule-tooltip{
+                    font-weight: bold;
+                    color:$primary;
+                    font-size: 1.5rem;
+                }
+            }
+        }
+
+        @media screen and (max-width: $md) {
+            .jobCreationForm{
+                display:grid;
+                grid-template-columns: minmax(0,1fr);
+
+                .jobCreationForm-staffSchedule{
+                    width: 100%;
+                    max-width: 100%;
+                    min-width: 100%;
+                }
             }
         }
     }

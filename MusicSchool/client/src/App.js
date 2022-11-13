@@ -26,6 +26,7 @@ import JobRejectionRequest from './Pages/admin/JobRejectionRequests';
 import Jobs from './Pages/admin/Jobs';
 
 import ManagerLanding from './Pages/manager/manager-landing';
+import JobAllocation from './Pages/manager/jobAllocation';
 
 import Unavailabilities from './Pages/admin/unavailabilities';
 /* function getToken() {  
@@ -104,6 +105,7 @@ export default function App() {
               {token.data[0].role === "manager" &&
               <DrawerSection label={"Modules"}>
                 <DrawerItem label="Home" to={"/"} logo={homeImg}></DrawerItem>
+                <DrawerItem label="Job Allocation" to={"/JobAllocation"} logo={scopeImg}></DrawerItem>
                 <DrawerItem label="Logout" to={"/Logout"} logo={logoutImg}></DrawerItem>
               </DrawerSection>
               }
@@ -137,6 +139,8 @@ export default function App() {
             {token.data[0].role === "manager" &&
             <Routes>
               <Route exact path="/" element={<ManagerLanding  user={token}/>}>
+              </Route>
+              <Route exact path="/JobAllocation"  element={<JobAllocation user={token}/>}>  
               </Route>
               <Route path="/Logout" element={<Logout logout={logout}></Logout>}>
               </Route>
