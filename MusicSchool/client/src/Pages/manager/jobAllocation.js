@@ -196,6 +196,7 @@ render(){
                 <CreateJobForm
                     jobs={this.state.jobs}
                     unavailabilities = {this.state.unavailabilities}
+                    requestRefresh={this.requestRefresh}
                 ></CreateJobForm>
             </button>
             <DatapageLayout 
@@ -267,6 +268,80 @@ class CreateJobForm extends React.Component{
         })
     }
 
+    validate = () => {
+        var dataToPush = this.state.dataToPush;
+        console.log(dataToPush.jobDate);
+        var valid = true;
+        var error = "";
+        var dataToPushJobDate = moment(dataToPush.jobDate).format("YYYY-MM-DD HH:mm");
+        if(moment(dataToPushJobDate).isAfter(moment(dataToPushJobDate).hour(20).minutes(30))){
+            valid = false;
+            error = "Job cannot be after 20:30 PM";
+            return {valid:valid, error:error};
+        }
+
+        if(moment(dataToPushJobDate).isBefore(moment(dataToPushJobDate).hour(8).minutes(0))){
+            valid = false;
+            error = "Job cannot be before 08:00 AM";
+            return {valid:valid, error:error};
+        }
+
+        this.props.jobs.map((item)=>{
+            var itemJobDate = moment(item.jobDate).format("YYYY-MM-DD HH:mm");
+            if(moment(dataToPushJobDate, "YYYY-MM-DD HH:mm")
+                .isBetween(moment(itemJobDate, "YYYY-MM-DD HH:mm"), moment(itemJobDate, "YYYY-MM-DD HH:mm").add(30, 'minutes'),null, "[]")){
+                valid = false;
+                error = "Job is already scheduled for this time";
+                return {valid:valid, error:error};
+            }
+        })
+
+        this.props.unavailabilities.map((item)=>{
+            var itemJobDate = moment(item.jobDate).format("YYYY-MM-DD HH:mm");
+            if(moment(dataToPushJobDate, "YYYY-MM-DD HH:mm")
+                .isBetween(moment(itemJobDate, "YYYY-MM-DD HH:mm"), moment(itemJobDate, "YYYY-MM-DD HH:mm").add(30, 'minutes'),null, "[]")){
+                valid = false;
+                error = "Staff is unavailable for this time";
+                return {valid:valid, error:error};
+            }
+        })
+        return {valid:valid,error:error};
+    }
+
+    handleJobCreation =() =>{
+        var validity = this.validate();
+        validity.valid ?
+        this.createJob().then((content)=>{
+            console.log(content);
+            if(content.success){
+                this.setState({
+                    error:"Job created successfully!",
+                })
+                this.props.requestRefresh();
+            }else{
+                this.setState({
+                    error:content.message,
+                })
+            }
+        })
+        :
+        this.setState({
+            error:validity.error,
+        })
+    }
+
+    createJob = async () => {
+        return fetch("/jobs/create" , {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(this.state.dataToPush)
+        }).then(res => {
+            return res.json();
+        })
+    }
+
     render(){
         return(
 
@@ -277,7 +352,11 @@ class CreateJobForm extends React.Component{
             :
             <div className="jobCreationForm">
                 <div className="jobCreationForm-fields">
-                    
+                    {this.state.error &&
+                    <div className="alert alert-danger">
+                        {this.state.error}
+                    </div>
+                    }
                     {Object.keys(this.state.settings.fieldSettings).map((key, index) => {
                         return(
                             this.state.excludes.includes(key)?
@@ -294,7 +373,7 @@ class CreateJobForm extends React.Component{
                             ></StdInput>
                         )
                     })}
-                    <StdButton onClick={()=>{}}>Create Job</StdButton>
+                    <StdButton onClick={this.handleJobCreation}>Create Job</StdButton>
                 </div>
                 <div className="jobCreationForm-staffSchedule">
                     {this.state.dataToPush["staffID"] != "" ? 

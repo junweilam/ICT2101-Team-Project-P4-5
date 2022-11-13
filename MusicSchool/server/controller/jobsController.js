@@ -36,11 +36,7 @@ exports.create = async (req, res) => {
         jobDate: jobDate,
         jobStatus: jobStatus,
     }).into("Jobs").then(data =>{
-        knex.select("*").from("Jobs").where({title:title}).then(data =>{
         res.json({success:true, data, message: "Job created!"});
-        }).catch(err => {
-            res.json({success:false, message: err.message});
-        })
     }).catch(err => {
         res.json({success:false, message: err.message});
     });
