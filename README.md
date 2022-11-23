@@ -18,7 +18,7 @@ Both underlines need to be started in order for the application to work.
 
 ![Alt text](/gitassets/firsttimerun.png "First Time Run")
 
-Subsequent time's running
+Subsequent time's running:
 
 Run startWithoutNPM on client/package.json (client)  
 Run startWithoutNPM on package.json (server)  
