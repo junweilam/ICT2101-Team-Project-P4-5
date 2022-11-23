@@ -799,10 +799,19 @@ class JobModal extends React.Component{
                                 )
                                 
                             })}
+                            {this.props.job.status === "Pending" ?
+                            
                             <StdButton onClick={()=>this.handleRequestUpdate("Approved")}
                             >Approve</StdButton>
+                            
+                            :
+                            ""}
+                            {this.props.job.status === "Pending" ?
+                            
                             <StdButton onClick={()=>this.handleRequestUpdate("Rejected")}
                             >Reject</StdButton>
+                            :
+                            ""}
                         </div>
 
                         <div className="modal-fields">
