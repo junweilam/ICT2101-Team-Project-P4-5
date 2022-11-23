@@ -1515,7 +1515,11 @@ export class WeekView extends React.Component{
                     <IconButton className={"invert"} icon={<i className="bi bi-chevron-double-right"></i>} onClick={this.nextWeek}></IconButton>
                 </div>
                 <div className="weekView-week-container">
-                    <div className="weekView-calendar" style={{"--maxRow": this.props.maxTimeSlot}}>
+                    <div className="weekView-calendar" style={
+                        this.props.maxSlots != "MAX" ?{"--maxRow": this.props.maxTimeSlot}:{
+                            "height": "auto"
+                        }
+                    }>
                         <div className="weekView-weekDays" style={{"--rows": this.state.calendar.length + 1}} ref={"dateHeader"}>
                             <div className="spacer"></div>
                             {this.state.calendar.map((day, index) => {

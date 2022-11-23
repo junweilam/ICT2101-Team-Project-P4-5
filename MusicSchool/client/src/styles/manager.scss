@@ -168,6 +168,7 @@
             position: relative;
             display:grid;
             grid-template-columns: repeat(2, minmax(0,1fr));
+            grid-template-rows: repeat(1, minmax(0,1fr));
             align-items: stretch;
             border-radius: 10px;
             gap: 15px;
@@ -175,6 +176,7 @@
 
             @media screen and (max-width: $md) {
                 grid-template-columns: repeat(1, minmax(0,1fr));
+                grid-template-rows: repeat(1, minmax(0,1fr));
             }
 
             .jobCreationForm-fields{
@@ -238,7 +240,7 @@
         @for $i from 3 through 100 {
             .eligibleStaff-Chip:nth-child(#{$i}){
                 animation : fadeIn 0.3s ease-in-out both;
-                animation-delay: 0.1s * ($i - 3);
+                animation-delay: 25ms * ($i - 3);
 
             }
 

@@ -31,10 +31,9 @@ settings ={
 }
 
 async componentDidMount(){
-
-    console.log(moment().startOf('week').format("YYYY-MM-DDTHH:mm"));
-    console.log(moment().endOf('week').format("YYYY-MM-DDTHH:mm"));
-
+    this.setState({
+        loading:true
+    })
     await this.getContent().then((content)=>{
         console.log(content);
         this.setState({
@@ -167,16 +166,7 @@ handleUpdate = async (data) =>{
 }
 
 requestRefresh = async () =>{
-    this.setState({
-        loading:true,
-    })
-    await this.getContent().then((content)=>{
-        console.log(content);
-        this.setState({
-            content:content,
-            loading:false,
-        });
-    })
+    this.componentDidMount();
 }
 
 closeModal = () =>{
@@ -333,6 +323,14 @@ class CreateJobForm extends React.Component{
             return a.hours - b.hours;
         });
         
+        if(staffIDs.includes(this.state.dataToPush.staffID)){
+            var dataToPush = this.state.dataToPush;
+            dataToPush.staffID = "";
+            this.setState({
+                dataToPush:dataToPush,
+            })
+        }
+
         this.setState({
             staffIDs:eligibleStaff,
             showEligibleStaff:true,
@@ -428,6 +426,19 @@ class CreateJobForm extends React.Component{
         })
     }
 
+    handleCellClick = (e) =>{
+        var dataToPush = this.state.dataToPush;
+        var date = moment(e, "DD-MM-YYYY HH:mm").format("YYYY-MM-DD");
+        var time = moment(e, "DD-MM-YYYY HH:mm").format("H:mm");
+        dataToPush["jobDate"] = date;
+        dataToPush["jobTime"] = time;
+        this.setState({
+            dataToPush:dataToPush,
+        })
+
+        this.findEligibleStaff();
+    }
+
     render(){
         return(
 
@@ -437,7 +448,7 @@ class CreateJobForm extends React.Component{
             </div>
             :
             <div className="jobCreationForm">
-                <div className="jobCreationForm-fields">
+                <div className="jobCreationForm-fields" ref={"jobCreationForm-left"}>
                     {this.state.error &&
                     <div className="alert alert-danger">
                         {this.state.error}
@@ -454,6 +465,7 @@ class CreateJobForm extends React.Component{
                                 onChange={this.handleOnChange}
                                 options={this.state.settings.fieldSettings[key].options}
                                 enabled={this.state.settings.fieldSettings[key].editable}
+                                value={this.state.dataToPush[key]}
                                 fieldLabel={key}
                                 maxItems={5}
                                 allowEmpty={true}
@@ -498,13 +510,29 @@ class CreateJobForm extends React.Component{
                 </div>
                 <div className="jobCreationForm-staffSchedule">
                     {this.state.dataToPush["staffID"] != "" ? 
-                    <WeekSchedule sid ={this.state.dataToPush["staffID"]} data = {this.props.jobs} unavailabilities = {this.props.unavailabilities}/>
+                    <WeekSchedule 
+                    sid ={this.state.dataToPush["staffID"]} 
+                    data = {this.props.jobs} 
+                    header={(this.state.staff.find((staff)=>{
+                        return staff.uid == this.state.dataToPush["staffID"]
+                    })).name + "'s Schedule"}
+                    unavailabilities = {this.props.unavailabilities}
+                    onCellClick = {this.handleCellClick}
+                    maxTimeSlots = {8}
+                    />
                     
-                    :<div className="staffSchedule-tooltip">
-                        Select a staff to see their schedule    
-                    </div>}
+                    :
+                    <WeekSchedule 
+                    sid ={[]} 
+                    data = {[]} 
+                    header={"Select a staff member to view their schedule"}
+                    unavailabilities = {[]}
+                    onCellClick = {this.handleCellClick}
+                    maxTimeSlots = {8}
+                    />
+                    }
                 </div>
-                    <StdButton onClick={this.handleJobCreation}>Create Job</StdButton>
+                <StdButton onClick={this.handleJobCreation}>Create Job</StdButton>
             </div>
         )
     }
@@ -556,6 +584,12 @@ export class WeekSchedule extends React.Component{
         }
     }
 
+    onCellClick = (e) =>{
+        if(this.props.onCellClick){
+            this.props.onCellClick(e);
+        }
+    }
+
     render(){
         return(
             this.state.loading ? 
@@ -563,17 +597,22 @@ export class WeekSchedule extends React.Component{
             :
             
             <div className={"card-bg no-pad"}>
-                <div className="header">This week's schedule</div>
+                <div className="header">{this.props.header}</div>
                 <div className="body">
 
-                    <WeekView showDate={true} timeField={"jobDate"} maxTimeSlot={6} cellComponent={<EventCell items={this.state.jobs} unavailabilities={this.state.unavailabilities}></EventCell>}></WeekView>
+                    <WeekView showDate={true} timeField={"jobDate"} maxTimeSlot={this.props.maxTimeSlot} cellComponent={
+                        <EventCell items={this.state.jobs} unavailabilities={this.state.unavailabilities} onCellClick={this.onCellClick}></EventCell>
+                    }></WeekView>
                 </div>
 
             </div>
         )
     }
 }
-
+WeekSchedule.defaultProps = {
+    maxTimeSlot: 6,
+    header: "This week's schedule",
+}
 
 
 export class EventCell extends React.Component{
@@ -625,24 +664,31 @@ export class EventCell extends React.Component{
             job:jobs,
             unavailability:unavailability,
         })
+    }
+
+    handleOnClick = () =>{
+        if(this.props.onCellClick){
+            this.props.onCellClick(this.props.index);
+        }
 
     }
+
     render(){
         if(this.state.job){
             return(
-                <div className="event" onClick={()=>this.props.onCellClick(this.state.job.jid)}>{this.state.job.jobName}</div>   
+                <div className="event" onClick={this.handleOnClick}>{this.state.job.jobName}</div>   
             )   
         }
 
         if(this.state.unavailability){
             return(
-                <div className="event unavailable">Unavailable</div>   
+                <div className="event unavailable" onClick={this.handleOnClick}>Unavailable</div>   
             )
         }
 
         return(
             
-            <div className="event"></div>   
+            <div className="event" onClick={this.handleOnClick}></div>   
         )
     }
 }

@@ -263,6 +263,8 @@ export class EventCell extends React.Component{
             unavailability:unavailabilities,
         })
     }
+
+    
     render(){
         if(this.state.job){
             return (

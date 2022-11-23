@@ -279,6 +279,15 @@ export class StdInput extends React.Component {
       this.feedback({success:false, msg: "Failed to save changes"});
   };
 
+  componentDidUpdate(prevProps) {
+    if (this.props.value !== prevProps.value) {
+      this.setState({
+        value: this.props.value,
+        newValue: this.props.value,
+      });
+    }
+  }
+
   feedback = (message) =>{
     console.log(message);
     if(message.success){
@@ -609,6 +618,13 @@ class StdDateBox extends React.Component {
     this.props.updateValue(e.target.value);
   };
 
+  componentDidUpdate(prevProps){
+    if(prevProps.value !==  this.props.value){
+      this.setState({
+        newValue: this.props.value,
+      })
+    }
+  }
   render() {
     return (
       <div
@@ -898,6 +914,15 @@ class StdNumberBox extends React.Component {
     });
   }
 
+  componentDidUpdate(prevProps){
+    if(prevProps.value !== this.state.newValue){
+      this.setState({
+        newValue: this.props.value,
+      })
+    }
+  }
+
+
   onChange = (e) => {
     this.setState({
       newValue: e.target.value,
@@ -973,6 +998,14 @@ class StdDropDownBox extends React.Component {
     this.setState({
       newValue: this.props.allowEmpty ? "" : this.props.options[0].value,
     });
+  }
+
+  componentDidUpdate(prevProps){
+    if(prevProps.value !==  this.props.value){
+      this.setState({
+        newValue: this.props.value,
+      })
+    }
   }
 
   onChange = (e) => {
