@@ -12,18 +12,20 @@ Open NPM scripts in view
 
 First time running:
 
-Run start on client/package.json
-Run start on package.json
+Run start on client/package.json (client)  
+Run start on package.json (server)  
+Both underlines need to be started in order for the application to work.  
 
-![Alt text](/gitassets/firsttimerun.jpg "First Time Run")
+![Alt text](/gitassets/firsttimerun.png "First Time Run")
 
-Subsequent time's running
+Subsequent time's running:
 
-Run startWithoutNPM on client/package.json
-Run startWithoutNPM on package.json
-Due to some issues with camera only working on HTTPS only use google chrome.
+Run startWithoutNPM on client/package.json (client)  
+Run startWithoutNPM on package.json (server)  
+Due to some issues with camera only working on HTTPS only use google chrome.  
+Both underlines need to be started in order for the application to work.  
 
-![Alt text](/gitassets/subsequenttimerun.jpg "First Time Run")
+![Alt text](/gitassets/subsequenttimerun.png "Subsequent Time Run")
 
 To Run the webapp on mobile
 Ensure both mobile and the device the project is running on are connected to the same network.
@@ -35,11 +37,14 @@ Key in https://[ip the device the project is running on]:3000 on google chrome m
 To test out all the features
 use the login credentials:
 
-Sample staff
-username: teststaff password: 1234
+Sample staff  
+username: teststaff  
+password: 1234  
 
-Sample manager
-username: testmanager password: 1234
+Sample manager  
+username: testmanager  
+password: 1234  
 
-Sample admin
-username: testadmin password: 1234
+Sample admin  
+username: testadmin  
+password: 1234  
