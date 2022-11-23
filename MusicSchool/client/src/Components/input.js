@@ -996,7 +996,7 @@ class StdDropDownBox extends React.Component {
 
   componentDidMount() {
     this.setState({
-      newValue: this.props.allowEmpty ? "" : this.props.options[0].value,
+      newValue: this.props.allowEmpty ? "" : this.props.value,
     });
   }
 
@@ -1040,10 +1040,11 @@ class StdDropDownBox extends React.Component {
           autoComplete={this.props.autoComplete}
           placeholder={""}
           onChange={(e) => this.onChange(e)}
-          value={this.state.newValue}
+          value={String(this.state.newValue)}
+          defaultValue = {this.props.allowEmpty ? "" : this.props.options[0].value}
           required={this.props.required}
         >
-          {this.props.allowEmpty ? <option className="emptyDefault" selected value=""></option> : ""}
+          {this.props.allowEmpty ? <option className="emptyDefault" value=""></option> : ""}
           {this.props.options.map((option,index) => {
             return <option 
             className="dropdownOptions" 

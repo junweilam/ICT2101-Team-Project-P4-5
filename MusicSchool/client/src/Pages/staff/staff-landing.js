@@ -602,13 +602,13 @@ class JobModal extends React.Component{
                                 )
                                 
                             })}
-                            <StdButton onClick={this.handleRejectSubmit}
-                            >Submit</StdButton>
                             {this.state.dataToPush.jrrid !== "" ? 
                             
                             <StdButton onClick={this.handleDeleteSubmit}
                             >Cancel Request</StdButton>:
-                            ""}
+                            
+                            <StdButton onClick={this.handleRejectSubmit}
+                            >Submit</StdButton>}
                         </div>
                         </MultiStepBox>
                     </div>

@@ -175,6 +175,8 @@ knex.schema
           table.foreign("staffID").references("uid").inTable("Users")
           table.string("reason");
           table.string("status");
+          table.dateTime("requestCreatedOn");
+          table.dateTime("requestUpdatedOn");
         })
         .then(() => {
           console.log("Table 'JobRejectionRequest' created");

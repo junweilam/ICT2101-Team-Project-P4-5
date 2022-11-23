@@ -10,7 +10,12 @@ import SlideDrawer, { Backdrop, DrawerItem, DrawerSection } from './Components/s
 
 import homeImg from "./Assets/nav/house.png";
 import userImg from "./Assets/nav/user.png";
-import scopeImg from "./Assets/nav/endoscope.png";
+import roomImg from "./Assets/nav/room.png";
+import instrumentImg from "./Assets/nav/instrument.png";
+import jobsImg from "./Assets/nav/jobs.png";
+import requestImg from "./Assets/nav/request.png";
+import unavailableImg from "./Assets/nav/unavailable.png";
+
 import logoutImg from "./Assets/nav/logout.png";
 
 import Users from './Pages/Users';
@@ -84,26 +89,25 @@ export default function App() {
             <SlideDrawer show={drawerOpen} toggle={drawerToggleClickHandler} direction={"top"}>
               {token.data[0].role === "admin" && 
               <DrawerSection label={"Modules"}>
-                <DrawerItem label="Dashboard" to={"/"} logo={homeImg} currentActive = {active} setActive={setActive}></DrawerItem>
-                <DrawerItem label="Users" to={"/Users"} logo={userImg} currentActive = {active} setActive={setActive}></DrawerItem>
-                <DrawerItem label="Studio" to={"/Studio"} logo={scopeImg} currentActive = {active} setActive={setActive}></DrawerItem>
-                <DrawerItem label="Instruments" to={"/Instruments"} logo={scopeImg} currentActive = {active} setActive={setActive}></DrawerItem>
-                <DrawerItem label="Jobs" to={"/Jobs"} logo={scopeImg} currentActive = {active} setActive={setActive}></DrawerItem>
-                <DrawerItem label="Requests" to={"/Requests"} logo={scopeImg} currentActive = {active} setActive={setActive}></DrawerItem>
-                <DrawerItem label="Unavailabilities" to={"/Unavailabilities"} logo={scopeImg} currentActive = {active} setActive={setActive}></DrawerItem>
+                <DrawerItem label="Users" to={"/"} logo={userImg} currentActive = {active} setActive={setActive}></DrawerItem>
+                <DrawerItem label="Studio" to={"/Studio"} logo={roomImg} currentActive = {active} setActive={setActive}></DrawerItem>
+                <DrawerItem label="Instruments" to={"/Instruments"} logo={instrumentImg} currentActive = {active} setActive={setActive}></DrawerItem>
+                <DrawerItem label="Jobs" to={"/Jobs"} logo={jobsImg} currentActive = {active} setActive={setActive}></DrawerItem>
+                <DrawerItem label="Requests" to={"/Requests"} logo={requestImg} currentActive = {active} setActive={setActive}></DrawerItem>
+                <DrawerItem label="Unavailabilities" to={"/Unavailabilities"} logo={unavailableImg} currentActive = {active} setActive={setActive}></DrawerItem>
               </DrawerSection>
               }
               {token.data[0].role === "staff" &&
               <DrawerSection label={"Modules"}>
                 <DrawerItem label="Home" to={"/"} logo={homeImg}></DrawerItem>
-                <DrawerItem label="Availabilities" to={"/Availabilities"} logo={scopeImg}></DrawerItem>
+                <DrawerItem label="Availabilities" to={"/Availabilities"} logo={unavailableImg}></DrawerItem>
                 <DrawerItem label="Logout" to={"/Logout"} logo={logoutImg}></DrawerItem>
               </DrawerSection>
               }
               {token.data[0].role === "manager" &&
               <DrawerSection label={"Modules"}>
                 <DrawerItem label="Home" to={"/"} logo={homeImg}></DrawerItem>
-                <DrawerItem label="Job Allocation" to={"/JobAllocation"} logo={scopeImg}></DrawerItem>
+                <DrawerItem label="Job Allocation" to={"/JobAllocation"} logo={jobsImg}></DrawerItem>
                 <DrawerItem label="Logout" to={"/Logout"} logo={logoutImg}></DrawerItem>
               </DrawerSection>
               }
@@ -111,8 +115,7 @@ export default function App() {
             
             {token.data[0].role === "admin" &&
             <Routes>
-              <Route exact path="/" element={<StaffLanding navigate={navigate} user={token}/>}/>
-              <Route path="/Users" element={<Users user={token}/>}/>
+              <Route path="/" element={<Users user={token}/>}/>
               <Route path="/Studio" element={<Studios user={token}/>}/>
               <Route path="/Instruments" element={<Instruments user={token}/>}/>
 
