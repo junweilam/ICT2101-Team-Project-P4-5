@@ -38,10 +38,13 @@ To test out all the features
 use the login credentials:
 
 Sample staff
-username: teststaff  password: 1234
+username: teststaff  
+password: 1234  
 
 Sample manager
-username: testmanager  password: 1234
+username: testmanager  
+password: 1234  
 
 Sample admin
-username: testadmin  password: 1234
+username: testadmin  
+password: 1234  
