@@ -37,14 +37,14 @@ Key in https://[ip the device the project is running on]:3000 on google chrome m
 To test out all the features
 use the login credentials:
 
-Sample staff
+Sample staff  
 username: teststaff  
 password: 1234  
 
-Sample manager
+Sample manager  
 username: testmanager  
 password: 1234  
 
-Sample admin
+Sample admin  
 username: testadmin  
 password: 1234  
