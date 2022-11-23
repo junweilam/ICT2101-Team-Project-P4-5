@@ -15,7 +15,7 @@ First time running:
 Run start on client/package.json
 Run start on package.json
 
-![Alt text](gitassets/firsttimerun.jpg "First Time Run")
+![Alt text](./gitassets/firsttimerun.jpg "First Time Run")
 
 Subsequent time's running
 
@@ -23,7 +23,7 @@ Run startWithoutNPM on client/package.json
 Run startWithoutNPM on package.json
 Due to some issues with camera only working on HTTPS only use google chrome.
 
-![Alt text](gitassets/subsequenttimerun.jpg "First Time Run")
+![Alt text](./gitassets/subsequenttimerun.jpg "First Time Run")
 
 To Run the webapp on mobile
 Ensure both mobile and the device the project is running on are connected to the same network.
