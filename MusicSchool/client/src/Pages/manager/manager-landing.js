@@ -305,7 +305,8 @@ render(){
                                                 </span>
                                             </div>
                                             <div className="request-item-hours">
-                                                {moment(request.jobDate).format("DD/MM/YYYY HH:mm a")}
+                                                {moment(request.jobDate).format("DD/MM/YYYY")}
+                                                {moment(request.jobTime,"HH:mm").format(", HH:mm a")}
                                             </div>
                                         </div>
                                     )
@@ -329,7 +330,8 @@ render(){
                                                 </span>
                                             </div>
                                             <div className="request-item-hours">
-                                                {moment(request.jobDate).format("DD/MM/YYYY HH:mm a")}
+                                                {moment(request.jobDate).format("DD/MM/YYYY")}
+                                                {moment(request.jobTime,"HH:mm").format(", HH:mm a")}
                                             </div>
                                         </div>
                                     )
@@ -353,7 +355,8 @@ render(){
                                                 </span>
                                             </div>
                                             <div className="request-item-hours">
-                                                {moment(request.jobDate).format("DD/MM/YYYY HH:mm a")}
+                                                {moment(request.jobDate).format("DD/MM/YYYY")}
+                                                {moment(request.jobTime,"HH:mm").format(", HH:mm a")}
                                             </div>
                                         </div>
                                     )
@@ -377,7 +380,8 @@ render(){
                                                 </span>
                                             </div>
                                             <div className="request-item-hours">
-                                                {moment(request.jobDate).format("DD/MM/YYYY HH:mm a")}
+                                                {moment(request.jobDate).format("DD/MM/YYYY")}
+                                                {moment(request.jobTime,"HH:mm").format(", HH:mm a")}
                                             </div>
                                         </div>
                                     )
