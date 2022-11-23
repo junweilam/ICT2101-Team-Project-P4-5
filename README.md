@@ -12,16 +12,18 @@ Open NPM scripts in view
 
 First time running:
 
-Run start on client/package.json
-Run start on package.json
+Run start on client/package.json (client)  
+Run start on package.json (server)  
+Both underlines need to be started in order for the application to work.  
 
 ![Alt text](/gitassets/firsttimerun.png "First Time Run")
 
 Subsequent time's running
 
-Run startWithoutNPM on client/package.json
-Run startWithoutNPM on package.json
-Due to some issues with camera only working on HTTPS only use google chrome.
+Run startWithoutNPM on client/package.json (client)  
+Run startWithoutNPM on package.json (server)  
+Due to some issues with camera only working on HTTPS only use google chrome.  
+Both underlines need to be started in order for the application to work.  
 
 ![Alt text](/gitassets/subsequenttimerun.png "Subsequent Time Run")
 
