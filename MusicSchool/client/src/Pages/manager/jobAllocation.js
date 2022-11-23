@@ -228,8 +228,11 @@ render(){
 class CreateJobForm extends React.Component{
     state={
         loading:true,
-        excludes: ["jid"],
+        excludes: ["jid", "staffID"],
         dataToPush: {},
+        staff: [],
+        showEligibleStaff: false,
+        viewMoreStaff: false,
     }
     componentDidMount = async() =>{
         await this.getJobSettings().then((settings)=>{
@@ -244,9 +247,28 @@ class CreateJobForm extends React.Component{
             });
         })
 
+        await this.getStaff().then((staff)=>{
+            console.log(staff);
+            this.setState({
+                staff:staff.data,
+            })
+        })
+
         this.setState({
             loading:false,
         })
+    }
+
+    getStaff = async () =>{
+        return fetch("/users/allUsersOfRole" , {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body:JSON.stringify({role:"staff"})
+        }).then(res => {
+            return res.json();
+        });
     }
 
     getJobSettings = async () => {
@@ -261,47 +283,111 @@ class CreateJobForm extends React.Component{
     }
 
     handleOnChange = (field,e) =>{
+
+        console.log(e);
+
         var dataToPush = this.state.dataToPush;
         dataToPush[field] = e;
+
+        if(field === "jobDate"){
+            if(dataToPush["jobTime"] !== ""){
+                this.findEligibleStaff();
+            }
+        }
+
+        if(field === "jobTime"){
+            if(dataToPush["jobDate"] !== ""){
+                this.findEligibleStaff();
+            }
+        }
         this.setState({
             dataToPush:dataToPush,
         })
     }
 
+    findEligibleStaff = () =>{
+        var jobDate = this.state.dataToPush.jobDate;
+        var jobTime = this.state.dataToPush.jobTime;
+        
+        var staffIDs = [];
+
+        var staffsWithJobsAtProvidedDateTime = this.props.jobs.filter((job)=>{
+            return job.jobDate == jobDate && job.jobTime == jobTime;
+        }).map((job)=>{
+            if(!staffIDs.includes(job.staffID)){
+                staffIDs.push(job.staffID);
+            }
+        });
+
+        var staffsWithUnavailabilitiesAtProvidedDateTime = this.props.unavailabilities.filter((unavailability)=>{
+            return moment(unavailability.unavailableOn,"DD-MM-YYYY HH:mm").format("YYYY-MM-DD HH:mm") === moment(jobDate + " " + jobTime).format("YYYY-MM-DD HH:mm");
+        }).map((unavailability)=>{
+            if(!staffIDs.includes(unavailability.uid)){
+                staffIDs.push(unavailability.uid);
+            }
+        });
+
+        var eligibleStaff = this.state.staff.filter((staff)=>{
+            return !staffIDs.includes(staff.uid);
+        }).sort((a,b)=>{
+            return a.hours - b.hours;
+        });
+        
+        this.setState({
+            staffIDs:eligibleStaff,
+            showEligibleStaff:true,
+        })
+        
+    }
+
     validate = () => {
         var dataToPush = this.state.dataToPush;
+
+        try{
+            Object.keys(dataToPush).forEach((key)=>{
+                console.log(key);
+                if(this.state.excludes.includes(key)){
+                    return;
+                }else{
+                    if(dataToPush[key] == "" || dataToPush[key] === undefined || dataToPush[key] === null){
+                        throw {valid:false, error:this.state.settings.fieldSettings[key].displayLabel + " is empty!"};
+                    }
+                }
+            })
+        }catch(e){
+            return e;
+        }
+
+        var jobsForUser = this.props.jobs.filter((job)=>{
+            return job.staffID === dataToPush.staffID;
+        })
+
+        var unavailabilitiesForUser = this.props.unavailabilities.filter((unavailability)=>{
+            return unavailability.uid === dataToPush.staffID;
+        })
+
         console.log(dataToPush.jobDate);
         var valid = true;
         var error = "";
-        var dataToPushJobDate = moment(dataToPush.jobDate).format("YYYY-MM-DD HH:mm");
-        if(moment(dataToPushJobDate).isAfter(moment(dataToPushJobDate).hour(20).minutes(30))){
-            valid = false;
-            error = "Job cannot be after 20:30 PM";
-            return {valid:valid, error:error};
-        }
+        var dataToPushJobDate = moment(dataToPush.jobDate).format("YYYY-MM-DD");
+        var dataToPushJobTime = moment(dataToPush.jobTime).format("HH:mm");
 
-        if(moment(dataToPushJobDate).isBefore(moment(dataToPushJobDate).hour(8).minutes(0))){
-            valid = false;
-            error = "Job cannot be before 08:00 AM";
-            return {valid:valid, error:error};
-        }
-
-        this.props.jobs.map((item)=>{
-            var itemJobDate = moment(item.jobDate).format("YYYY-MM-DD HH:mm");
-            if(moment(dataToPushJobDate, "YYYY-MM-DD HH:mm")
-                .isBetween(moment(itemJobDate, "YYYY-MM-DD HH:mm"), moment(itemJobDate, "YYYY-MM-DD HH:mm").add(30, 'minutes'),null, "[]")){
+        jobsForUser.map((item)=>{
+            var itemJobDate = moment(item.jobDate).format("YYYY-MM-DD");
+            var itemJobTime = moment(item.jobTime).format("HH:mm");
+            if(dataToPushJobDate == itemJobDate && dataToPushJobTime == itemJobTime){
                 valid = false;
-                error = "Job is already scheduled for this time";
+                error = "Job already exists";
                 return {valid:valid, error:error};
             }
         })
 
-        this.props.unavailabilities.map((item)=>{
-            var itemJobDate = moment(item.jobDate).format("YYYY-MM-DD HH:mm");
-            if(moment(dataToPushJobDate, "YYYY-MM-DD HH:mm")
-                .isBetween(moment(itemJobDate, "YYYY-MM-DD HH:mm"), moment(itemJobDate, "YYYY-MM-DD HH:mm").add(30, 'minutes'),null, "[]")){
+        unavailabilitiesForUser.map((item)=>{
+            var itemDate = moment(item.unavailableOn).format("YYYY-MM-DD");
+            var itemTime = moment(item.unavailableOn).format("HH:mm");
+            if(dataToPushJobDate == itemDate && dataToPushJobTime == itemTime){
                 valid = false;
-                error = "Staff is unavailable for this time";
+                error = "Staff member is unavailable";
                 return {valid:valid, error:error};
             }
         })
@@ -370,10 +456,45 @@ class CreateJobForm extends React.Component{
                                 enabled={this.state.settings.fieldSettings[key].editable}
                                 fieldLabel={key}
                                 maxItems={5}
+                                allowEmpty={true}
                             ></StdInput>
                         )
                     })}
-                    <StdButton onClick={this.handleJobCreation}>Create Job</StdButton>
+
+                    {this.state.showEligibleStaff &&
+                        <div className="eligibleStaff">
+                            <div className="eligibleStaff-label">Eligible staff:</div>
+                            <div className="eligibleStaffList">
+                            {this.state.staffIDs.slice(0,this.state.viewMoreStaff ? undefined : 3).map((staff)=>{
+                            return(
+                                <div className={"eligibleStaff-Chip " + (this.state.dataToPush.staffID === staff.uid ? "active" : "")}>
+                                    <input type="radio" id={"staffID-" + staff.uid} className="eligibleStaff-radio" name="staffID" onChange={()=>{this.handleOnChange("staffID",staff.uid)}}>
+                                    
+                                    </input>
+                                    <label className="eligibleStaff-chip-label" htmlFor={"staffID-" + staff.uid}>
+                                        <span className="label-name">
+                                            {staff.name}
+                                        </span>
+                                        <span className="label-hours">
+                                            {staff.hours} hours
+                                        </span>
+                                    </label>
+                                </div>
+                            )
+                            })}
+
+                                <div className="eligibleStaff-view-more" onClick={()=>{this.setState({
+                                    viewMoreStaff:!this.state.viewMoreStaff
+                                    })}}>
+                                    {this.state.viewMoreStaff ? 
+                                        <div><i className="bi bi-dash"></i> <span>View Less</span></div>
+                                    :
+                                        <div><i className="bi bi-plus"></i> <span>View More</span></div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div className="jobCreationForm-staffSchedule">
                     {this.state.dataToPush["staffID"] != "" ? 
@@ -383,6 +504,7 @@ class CreateJobForm extends React.Component{
                         Select a staff to see their schedule    
                     </div>}
                 </div>
+                    <StdButton onClick={this.handleJobCreation}>Create Job</StdButton>
             </div>
         )
     }
@@ -444,7 +566,7 @@ export class WeekSchedule extends React.Component{
                 <div className="header">This week's schedule</div>
                 <div className="body">
 
-                    <WeekView timeField={"jobDate"} maxTimeSlot={6} cellComponent={<EventCell items={this.state.jobs} unavailabilities={this.state.unavailabilities}></EventCell>}></WeekView>
+                    <WeekView showDate={true} timeField={"jobDate"} maxTimeSlot={6} cellComponent={<EventCell items={this.state.jobs} unavailabilities={this.state.unavailabilities}></EventCell>}></WeekView>
                 </div>
 
             </div>
@@ -477,9 +599,11 @@ export class EventCell extends React.Component{
 
     findJobs = () =>{
         let jobs = this.props.items.find((item)=>{
-            var jobDateTime = moment(item.jobDate,"YYYY-MM-DDTHH:mm").format("YYYY-MM-DD HH:mm");
-            var indexDateTime = moment(this.props.index,"DD-MM-YYYY HH:mm").format("YYYY-MM-DD HH:mm");
-            return jobDateTime === indexDateTime;
+            var jobDate = moment(item.jobDate,"YYYY-MM-DD").format("YYYY-MM-DD");
+            var jobTime = moment(item.jobTime,"HH:mm").format("HH:mm");
+            var indexDate = moment(this.props.index,"DD-MM-YYYY HH:mm").format("YYYY-MM-DD");
+            var indexTime = moment(this.props.index,"DD-MM-YYYY HH:mm").format("HH:mm");
+            return jobDate === indexDate && jobTime === indexTime;
         })
         return jobs;
     }
@@ -512,7 +636,7 @@ export class EventCell extends React.Component{
 
         if(this.state.unavailability){
             return(
-                <div className="event">Unavailable</div>   
+                <div className="event unavailable">Unavailable</div>   
             )
         }
 

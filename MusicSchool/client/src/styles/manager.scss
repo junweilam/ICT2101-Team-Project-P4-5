@@ -153,6 +153,11 @@
     padding:15px;
     .jobCreationForm{
         display:none;
+        cursor: default;
+    }
+
+    .jobCreation-toggle-label{
+        font-weight: bold;
     }
 
     &:focus,&:focus-within{
@@ -161,11 +166,16 @@
             color:black;
             background-color: white;
             position: relative;
-            display:flex;
+            display:grid;
+            grid-template-columns: repeat(2, minmax(0,1fr));
             align-items: stretch;
             border-radius: 10px;
             gap: 15px;
             margin-top: 15px;
+
+            @media screen and (max-width: $md) {
+                grid-template-columns: repeat(1, minmax(0,1fr));
+            }
 
             .jobCreationForm-fields{
                 color:black;
@@ -175,16 +185,12 @@
                 grid-template-columns: minmax(0,1fr);
                 gap:10px;
                 text-align: left;
-                max-width: 50%;
-                min-width: 50%;
             }
 
             .jobCreationForm-staffSchedule{
-                max-width: 50%;
-                min-width: 50%;
                 display:flex;
                 padding-right: 10px;
-                align-items: center;
+                align-items: flex-start;
                 justify-content: center;
 
                 .card-bg{
@@ -209,6 +215,107 @@
                     max-width: 100%;
                     min-width: 100%;
                 }
+            }
+        }
+    }
+}
+.eligibleStaff{
+    
+    .eligibleStaff-label{
+        font-weight: bold;
+        color:black;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+    }
+
+    .eligibleStaffList{
+        display:flex;
+        flex-wrap: wrap;
+        gap:15px;
+
+        transition: 0.3s ease-in-out;
+
+        @for $i from 3 through 100 {
+            .eligibleStaff-Chip:nth-child(#{$i}){
+                animation : fadeIn 0.3s ease-in-out both;
+                animation-delay: 0.1s * ($i - 3);
+
+            }
+
+            @keyframes fadeIn {
+                0% {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0px);
+                }
+            }
+        }
+
+        .eligibleStaff-radio{
+            display:none;
+        }
+
+        .eligibleStaff-Chip{
+            display:flex;
+            align-items: center;
+            gap: 5px;
+            border-radius: 10px;
+            background-color: rgba($primary, 0.1);
+            font-weight: bold;
+            color:$chimericBlack;
+            transition: 0.3s ease-in-out;
+            &:hover{
+                cursor: pointer !important;
+                background-color: rgba($primary, 0.2);
+            }
+
+            &.active{
+                background-color: rgba($primary,1);
+                color:white;
+
+                span{
+                    color:white;
+                }
+            }
+        }
+
+        .eligibleStaff-chip-label{
+            display:flex;
+            flex-wrap: nowrap;
+            gap:10px;
+            padding:10px;
+            span{
+                white-space: nowrap;
+
+                &.label-name{
+
+                }
+
+                &.label-hours{
+                    font-weight: bold;
+                }
+            }
+        }
+
+        .eligibleStaff-view-more{
+            display:flex;
+            align-items: center;
+            gap: 5px;
+            padding:10px;
+            border-radius: 10px;
+            color: $primary;
+            transition: 0.3s ease-in-out;
+
+            &:hover{
+                cursor: pointer;
+                background-color: rgba($primary, 0.1);
+            }
+
+            span,i{
+                font-weight: bold;
             }
         }
     }

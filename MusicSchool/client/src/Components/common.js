@@ -1522,6 +1522,7 @@ export class WeekView extends React.Component{
                                 return (
                                     <div key={"d-" + index} className={"weekView-day " + (moment(day.fullDateFormat,"DD-MM-YYYY").format("DD-MM-YYYY") == moment(new Date()).format("DD-MM-YYYY") ? "active" : "")}>
                                         <span className="day">{day.day}</span>
+                                        {this.props.showDate && <span className="date">{day.date}</span>}
                                     </div>
                                 )
                             })}

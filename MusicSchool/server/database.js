@@ -143,7 +143,8 @@ knex.schema
           table.foreign("instrumentID").references("iid").inTable("Instruments")
           table.integer("staffID");
           table.foreign("staffID").references("uid").inTable("Users")
-          table.datetime("jobDate");
+          table.date("jobDate");
+          table.time("jobTime");
           table.string("jobStatus");
         })
         .then(() => {
@@ -169,7 +170,7 @@ knex.schema
         .createTable("JobRejectionRequest", (table) => {
           table.increments("jrrid").primary();
           table.integer("jobID");
-          table.foreign("jobID").references("jid").inTable("Jobs")
+          table.foreign("jobID").references("jid").inTable("Jobs").onDelete('CASCADE')
           table.integer("staffID");
           table.foreign("staffID").references("uid").inTable("Users")
           table.string("reason");

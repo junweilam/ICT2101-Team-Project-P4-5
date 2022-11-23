@@ -481,9 +481,11 @@ export class EventCell extends React.Component{
 
     findJobs = () =>{
         let jobs = this.props.items.find((item)=>{
-            var jobDateTime = moment(item.jobDate,"YYYY-MM-DDTHH:mm").format("YYYY-MM-DD HH:mm");
-            var indexDateTime = moment(this.props.index,"DD-MM-YYYY HH:mm").format("YYYY-MM-DD HH:mm");
-            return jobDateTime === indexDateTime;
+            var jobDate = moment(item.jobDate,"YYYY-MM-DD").format("YYYY-MM-DD");
+            var jobTime = moment(item.jobTime,"HH:mm").format("HH:mm");
+            var indexDate = moment(this.props.index,"DD-MM-YYYY HH:mm").format("YYYY-MM-DD");
+            var indexTime = moment(this.props.index,"DD-MM-YYYY HH:mm").format("HH:mm");
+            return jobDate === indexDate && jobTime === indexTime;
         })
         return jobs;
     }
@@ -516,7 +518,7 @@ export class EventCell extends React.Component{
 
         if(this.state.unavailability){
             return(
-                <div className="event">Unavailable</div>   
+                <div className="event unavailable">Unavailable</div>   
             )
         }
 

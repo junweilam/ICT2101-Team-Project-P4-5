@@ -196,3 +196,14 @@
         }
     }
 }
+
+
+.event{
+    &.unavailable{
+        background-color: $exclude !important;
+        color:white;
+        &:hover{
+            background-color: $primary !important;
+        }
+    }
+}

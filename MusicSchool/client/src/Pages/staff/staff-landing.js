@@ -20,6 +20,13 @@ export default class staffLanding extends React.Component{
             });
         })
 
+        await this.getUnavailabilities().then((unavailabilities)=>{
+            console.log(unavailabilities);
+            this.setState({
+                unavailabilities:unavailabilities.data,
+            });
+        })
+
         await this.getJobSettings().then((settings)=>{
             console.log(settings);
             this.setState({
@@ -37,6 +44,18 @@ export default class staffLanding extends React.Component{
 
     getJobs = async() =>{
         return fetch("/jobs/allJobsForStaff", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({uid:this.props.user.data[0].uid}), 
+        }).then(res => {
+            return res.json();
+        })
+    }
+
+    getUnavailabilities = async() =>{
+        return fetch("/unavailabilities/allUnavailabilitiesForUser", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -141,7 +160,10 @@ export default class staffLanding extends React.Component{
                             return(
                                 <div className="job-list-tile" onClick={()=>this.showModal(job.jid)}>
                                     <span className="tile-title">{job.jobName}</span>
-                                    <span className="tile-datetime">{moment(job.jobDate).format("dddd, DD-MM-YYYY HH:mm a")}</span>
+                                    <span className="tile-datetime">
+                                        {moment(job.jobDate).format("dddd, DD-MM-YYYY")}
+                                        {moment(job.jobTime,"HH:mm").format(" HH:mm a")}
+                                    </span>
                                 </div>
                             )
                         })}
@@ -150,7 +172,7 @@ export default class staffLanding extends React.Component{
             </div>
 
             <div className="col-12">
-                    <WeekSchedule data={this.state.jobs} showModal={this.showModal}></WeekSchedule>
+                    <WeekSchedule data={this.state.jobs} unavailabilities={this.state.unavailabilities} showModal={this.showModal}></WeekSchedule>
                 </div>
                 <div className="col-12">
                     <MonthSchedule data={this.state.jobs}></MonthSchedule>
@@ -177,7 +199,13 @@ export class WeekSchedule extends React.Component{
                 <div className="header">This week's schedule</div>
                 <div className="body">
 
-                    <WeekView timeField={"jobDate"} maxTimeSlot={6} cellComponent={<EventCell onCellClick={this.props.showModal} items={this.props.data}></EventCell>}></WeekView>
+                    <WeekView showDate={true} timeField={"jobDate"} maxTimeSlot={6} cellComponent={
+                    <EventCell 
+                    onCellClick={this.props.showModal} 
+                    items={this.props.data}
+                    unavailabilities={this.props.unavailabilities}
+                    ></EventCell>
+                    }></WeekView>
                 </div>
 
             </div>
@@ -197,8 +225,10 @@ export class EventCell extends React.Component{
                 index:this.props.index,
             })
             var jobs = this.findJobs();
+            var unavailabilities = this.findUnavailabilities();
             this.setState({
                 job:jobs,
+                unavailability:unavailabilities,
             })
         }
 
@@ -206,25 +236,48 @@ export class EventCell extends React.Component{
 
     findJobs = () =>{
         let jobs = this.props.items.find((item)=>{
-            var jobDateTime = moment(item.jobDate,"YYYY-MM-DDTHH:mm").format("YYYY-MM-DD HH:mm");
-            var indexDateTime = moment(this.props.index,"DD-MM-YYYY HH:mm").format("YYYY-MM-DD HH:mm");
-            return jobDateTime === indexDateTime;
+            var jobDate = moment(item.jobDate,"YYYY-MM-DD").format("YYYY-MM-DD");
+            var jobTime = moment(item.jobTime,"HH:mm").format("HH:mm");
+            var indexDate = moment(this.props.index,"DD-MM-YYYY HH:mm").format("YYYY-MM-DD");
+            var indexTime = moment(this.props.index,"DD-MM-YYYY HH:mm").format("HH:mm");
+            return jobDate === indexDate && jobTime === indexTime;
         })
         return jobs;
     }
 
+
+    findUnavailabilities = () => {
+        let unavailabilities = this.props.unavailabilities.find((item)=>{
+            var unavailabilityDateTime = moment(item.unavailableOn,"DD-MM-YYYY HH:mm").format("YYYY-MM-DD HH:mm");
+            var indexDateTime = moment(this.props.index,"DD-MM-YYYY HH:mm").format("YYYY-MM-DD HH:mm");
+            return unavailabilityDateTime === indexDateTime;
+        })
+        return unavailabilities;
+    }
+
     componentDidMount = () =>{
         var jobs = this.findJobs();
+        var unavailabilities = this.findUnavailabilities();
         this.setState({
             job:jobs,
+            unavailability:unavailabilities,
         })
     }
     render(){
+        if(this.state.job){
+            return (
+                
+                <div className="event" onClick={()=>this.props.onCellClick(this.state.job.jid)}>{this.state.job.jobName}</div>
+            )
+        }
+
+        if(this.state.unavailability){
+            return (
+                <div className="event unavailable">Unavailable</div>
+            )
+        }
+
         return(
-            this.state.job ? 
-            
-            <div className="event" onClick={()=>this.props.onCellClick(this.state.job.jid)}>{this.state.job.jobName}</div>
-            : 
             <div className="event"></div>
         )
     }
@@ -537,7 +590,7 @@ class JobModal extends React.Component{
                                     :
                                     <StdInput 
                                         label={this.state.settings.fieldSettings[field].displayLabel} 
-                                        enabled={true}
+                                        enabled={field == "reason" ? true : false}
                                         type={this.state.settings.fieldSettings[field].type}
                                         options={this.state.settings.fieldSettings[field].options}
                                         value={this.state.dataToPush[field]}

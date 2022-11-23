@@ -1,5 +1,3 @@
-import './App.css';
-import './styles/appCommon.scss';
 import Nav, {  } from './Components/nav'
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import React, { useEffect } from 'react';
@@ -156,7 +154,7 @@ export default function App() {
 class LoggedInNav extends React.Component {
 
   state = {
-    title: "EndoscopyManagement"
+    title: "MUSE"
   }
   componentDidMount() {
     window.addEventListener("resize", this.resize.bind(this));

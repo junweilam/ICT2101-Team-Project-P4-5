@@ -47,6 +47,7 @@ export class ExpandableRow extends React.Component {
         onMouseDown={this.handleButtonPress}
         onMouseUp={this.handleButtonRelease}
         onMouseLeave={this.handleButtonRelease}
+        className={"expandableRow"}
       >
         <div className={this.state.rowClasses} onClick={this.expand}  style={{"--Columns": Object.keys(this.props.headers).length}}>
           {/* {this.props.headers.map((cell, secIndex) => {

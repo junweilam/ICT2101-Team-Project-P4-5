@@ -378,6 +378,7 @@ export class StdInput extends React.Component {
               value={this.state.newValue}
               options={this.props.options}
               maxItems = {this.props.maxItems}
+              allowEmpty = {this.props.allowEmpty}
             ></StdDropDownBox>
           )}
 
@@ -970,26 +971,26 @@ class StdDropDownBox extends React.Component {
 
   componentDidMount() {
     this.setState({
-      newValue: this.props.value ? this.props.options.find((option) => option.value === this.props.value).label : "",
+      newValue: this.props.allowEmpty ? "" : this.props.options[0].value,
     });
   }
 
   onChange = (e) => {
-    if(this.props.allowManualEntry){
-      
     this.setState({
       newValue: e.target.value,
     });
     this.props.updateValue(e.target.value);
-    }
-  };
+  }
 
-  dropdownSelect = (option) =>{
+  dropdownSelect = (e,option) =>{
+    e.stopPropogation();
+    console.log(option);
     this.setState({
       newValue: option.label,
     });
     this.props.updateValue(option.value);
   }
+
   render() {
     return (
       <div
@@ -999,7 +1000,7 @@ class StdDropDownBox extends React.Component {
           (this.state.valueChanged ? "leftBorderRadius" : "borderRadius")
         }
       >
-        <input
+        <select
           className="stdInput dropdown"
           type="dropdown"
           ref={this.primaryInput}
@@ -1007,14 +1008,16 @@ class StdDropDownBox extends React.Component {
           placeholder={""}
           onChange={(e) => this.onChange(e)}
           value={this.state.newValue}
-        ></input>
-        <div className="dropdownWrapper">
-          <div className="dropdown" style={{"--maxItems": this.props.maxItems}}>
+          required={this.props.required}
+        >
+          {this.props.allowEmpty ? <option className="emptyDefault" selected value=""></option> : ""}
           {this.props.options.map((option,index) => {
-            return <div className="dropdownOptions" key={index} onClick ={()=>this.dropdownSelect(option)}>{option.label}</div>;
+            return <option 
+            className="dropdownOptions" 
+            key={index} 
+            value={option.value}>{option.label}</option>
           })}
-          </div>
-        </div>
+        </select>
         {this.props.showIndicator ? (
           this.state.editable ? (
             <i className="bi bi-pencil "></i>

@@ -2809,6 +2809,13 @@ nav {
     overflow: hidden;
 }
 
+.expandableRow{
+    
+    &:not(:last-child){
+        border-bottom: 1px solid rgba(60, 60, 60, 0.1);
+    }
+}
+
 .tableRow {
     grid-template-columns: repeat(var(--Columns), 1fr);
     display: grid;
@@ -3392,7 +3399,7 @@ nav {
 
         .weekView-weekDays{
             display:grid;
-            grid-template-columns: 75px repeat(calc(var(--rows) - 1), minmax(75px,75px)) !important;
+            grid-template-columns: 75px repeat(calc(var(--rows) - 1), minmax(100px,100px)) !important;
             width: 100%;
             position:sticky;
             overflow: visible;
@@ -3413,7 +3420,7 @@ nav {
         .weekView-days{
             left:75px;
             display:grid;
-            grid-template-columns: repeat(var(--columns), minmax(75px,75px)) !important;
+            grid-template-columns: repeat(var(--columns), minmax(100px,100px)) !important;
             width: 100%;
             overflow: visible !important;
         }
@@ -3521,10 +3528,16 @@ nav {
             justify-content: center;
             align-items: center;
             color:white;
+            flex-direction: column;
+            gap:5px;
             span{
                 font-weight: bold;
                 font-size: $large-font;
                 &.day{
+                    font-size: $medium-font;
+                }
+
+                &.date{
                     font-size: $medium-font;
                 }
             }
@@ -3656,13 +3669,11 @@ nav {
         background-color: white;
         border-radius: $borderRadius;
         padding: 15px;
-
+        height: auto;
         width:60%;
-        height:60%;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
+        justify-content: flex-start;
         position: relative;
         max-width: 500px;
         @media screen and (max-width: $sm){
@@ -3694,16 +3705,17 @@ nav {
         .modal-body{
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-start;
+            align-items: flex-start;
             width: 100%;
+            overflow: auto;
             .Multistep-Container{
                 width:100%;
             }
             .modal-fields{
                 display:flex;
                 flex-direction: column;
-                justify-content: center;
+                justify-content: flex-start;
                 width: 100%;
                 gap:15px;
             }
