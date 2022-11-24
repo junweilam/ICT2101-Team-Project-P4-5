@@ -113,7 +113,7 @@ exports.settings = async (req, res) => {
             displayLabel: "Type",
             options:[
                 {value: "Piano", label: "Piano"},
-                {value: "Drums", label: "Drums"},
+                {value: "Drum", label: "Drums"},
                 {value: "Violin", label: "Violin"},
                 {value: "Trumpet", label: "Trumpet"},
             ]
@@ -150,7 +150,7 @@ exports.getInstrumentTypes = async (req, res) => {
         success: true,
         options:[
             {value: "Piano", label: "Piano"},
-            {value: "Drums", label: "Drums"},
+            {value: "Drum", label: "Drums"},
             {value: "Violin", label: "Violin"},
             {value: "Trumpet", label: "Trumpet"},
         ],

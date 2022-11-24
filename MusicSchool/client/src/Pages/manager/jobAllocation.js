@@ -357,20 +357,26 @@ class CreateJobForm extends React.Component{
             }
         });
 
-        var staffsWithMismatchedPreferences = this.props.preferences.filter((preference)=>{
-            return preference.instrumentID !== this.state.dataToPush.instrumentID || preference.instrumentID !== "any";
+        var staffsWithMisMatchedPreferences = this.props.preferences.filter((preference)=>{
+            return preference.type != this.state.instruments.find((instrument)=>{
+                return instrument.value == this.state.dataToPush.instrumentID;
+            }).label.split(" ")[0];
         }).map((preference)=>{
             if(!staffIDs.includes(preference.uid)){
                 staffIDs.push(preference.uid);
             }
-        });
+        })
 
+        console.log(staffsWithMisMatchedPreferences);
 
         var eligibleStaff = this.state.staff.filter((staff)=>{
             return !staffIDs.includes(staff.uid);
         }).sort((a,b)=>{
             return a.hours - b.hours;
         });
+
+        console.log(eligibleStaff);
+
 
         if(staffIDs.includes(this.state.dataToPush.staffID)){
             var dataToPush = this.state.dataToPush;
