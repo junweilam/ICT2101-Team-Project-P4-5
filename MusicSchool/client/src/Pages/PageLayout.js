@@ -415,6 +415,7 @@ class AddEntry extends React.Component{
                             onChange = {this.onChange}
                             options={this.props.fieldSettings[key].options}
                             dateFormat = {this.props.fieldSettings[key].dateFormat}
+                            allowEmpty = {true}
                             >
                             </StdInput>)
                     }

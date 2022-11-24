@@ -1432,6 +1432,9 @@ export class WeekView extends React.Component{
                         return {date: index.add(1, 'day').format("D"), day: index.format("ddd"), month: index.format("MM"), fullDateFormat: index.format("DD-MM-YYYY")};
                     }
                 );
+        if(this.props.initCalendar){
+            this.props.initCalendar(calendar);
+        }
         return calendar;
     }
 
@@ -1449,7 +1452,7 @@ export class WeekView extends React.Component{
                 })
                 
                 if(this.props.nextWeek){
-                    this.props.nextWeek();
+                    this.props.nextWeek(days);
                 }
             }
         }else{
@@ -1462,7 +1465,7 @@ export class WeekView extends React.Component{
             })
             
             if(this.props.nextWeek){
-                this.props.nextWeek();
+                this.props.nextWeek(days);
             }
         }
     }
@@ -1481,7 +1484,7 @@ export class WeekView extends React.Component{
                     calendar: days
                 })
                 if(this.props.prevWeek){
-                    this.props.prevWeek();
+                    this.props.prevWeek(days);
                 };
             }
         }else{
@@ -1493,7 +1496,7 @@ export class WeekView extends React.Component{
                 calendar: days
             })
             if(this.props.prevWeek){
-                this.props.prevWeek();
+                this.props.prevWeek(days);
             };
         }
     }

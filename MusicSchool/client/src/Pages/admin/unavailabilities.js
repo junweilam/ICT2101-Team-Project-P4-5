@@ -1,5 +1,6 @@
 
 import React from "react"
+import { Loading } from "../../Components/appCommon"
 import DatapageLayout from "../PageLayout"
 
 export default class Unavailabilities extends React.Component {
@@ -110,7 +111,7 @@ export default class Unavailabilities extends React.Component {
 
     render(){
         if(this.state.loading){
-            return <div>Loading</div>
+            return <Loading></Loading>
         }else{
             
         return(

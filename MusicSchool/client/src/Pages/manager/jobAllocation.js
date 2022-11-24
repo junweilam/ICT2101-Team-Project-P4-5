@@ -41,6 +41,20 @@ async componentDidMount(){
         });
     })
 
+    await this.getUnavailabilities().then((unavailabilities)=>{
+        console.log(unavailabilities);
+        this.setState({
+            unavailabilities:unavailabilities.data,
+        });
+    })
+
+    await this.getPreferences().then((preferences)=>{
+        console.log(preferences);
+        this.setState({
+            preferences:preferences.data,
+        });
+    });
+
     await this.getJobs().then((jobs)=>{
         console.log(jobs);
         this.setState({
@@ -67,12 +81,6 @@ async componentDidMount(){
         loading:false,
     })
 
-    await this.getUnavailabilities().then((unavailabilities)=>{
-        console.log(unavailabilities);
-        this.setState({
-            unavailabilities:unavailabilities.data,
-        });
-    })
 }
 
 getSettings = async () => {
@@ -135,6 +143,18 @@ getUnavailabilities = async () => {
     });
 }
 
+getPreferences = async () => {
+    return fetch("/jobPreferences/allPreferences",{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+    .then(res => {
+        return res.json();
+    });
+}
+
 update = async (data) =>{
     console.log(data);
     return fetch(this.settings.api + "update" , {
@@ -185,6 +205,7 @@ render(){
                 <span className="jobCreation-toggle-label">Create Job</span>
                 <CreateJobForm
                     jobs={this.state.jobs}
+                    preferences = {this.state.preferences}
                     unavailabilities = {this.state.unavailabilities}
                     requestRefresh={this.requestRefresh}
                 ></CreateJobForm>
@@ -219,6 +240,7 @@ class CreateJobForm extends React.Component{
     state={
         loading:true,
         excludes: ["jid", "staffID"],
+        instruments: [],
         dataToPush: {},
         staff: [],
         showEligibleStaff: false,
@@ -274,22 +296,40 @@ class CreateJobForm extends React.Component{
 
     handleOnChange = (field,e) =>{
 
-        console.log(e);
+        console.log(field,e);
 
         var dataToPush = this.state.dataToPush;
         dataToPush[field] = e;
 
+        if(field === "studioID"){
+            var instruments = this.state.settings.fieldSettings.instrumentID.options.filter((instrument)=>{
+                console.log(instrument);
+                return parseInt(instrument.studio) === parseInt(e);
+            });
+            console.log(instruments)
+            this.setState({
+                instruments:instruments,
+            })
+        }
+
         if(field === "jobDate"){
-            if(dataToPush["jobTime"] !== ""){
+            if(dataToPush["jobTime"] !== "" && dataToPush["instrumentID"] !== ""){
                 this.findEligibleStaff();
             }
         }
 
         if(field === "jobTime"){
-            if(dataToPush["jobDate"] !== ""){
+            if(dataToPush["jobDate"] !== "" && dataToPush["instrumentID"] !== ""){
                 this.findEligibleStaff();
             }
         }
+
+        if(field === "instrumentID"){
+            if(dataToPush["jobDate"] !== "" && dataToPush["jobTime"] !== ""){
+                this.findEligibleStaff();
+            }
+        }
+
         this.setState({
             dataToPush:dataToPush,
         })
@@ -317,12 +357,21 @@ class CreateJobForm extends React.Component{
             }
         });
 
+        var staffsWithMismatchedPreferences = this.props.preferences.filter((preference)=>{
+            return preference.instrumentID !== this.state.dataToPush.instrumentID || preference.instrumentID !== "any";
+        }).map((preference)=>{
+            if(!staffIDs.includes(preference.uid)){
+                staffIDs.push(preference.uid);
+            }
+        });
+
+
         var eligibleStaff = this.state.staff.filter((staff)=>{
             return !staffIDs.includes(staff.uid);
         }).sort((a,b)=>{
             return a.hours - b.hours;
         });
-        
+
         if(staffIDs.includes(this.state.dataToPush.staffID)){
             var dataToPush = this.state.dataToPush;
             dataToPush.staffID = "";
@@ -344,7 +393,7 @@ class CreateJobForm extends React.Component{
         try{
             Object.keys(dataToPush).forEach((key)=>{
                 console.log(key);
-                if(this.state.excludes.includes(key)){
+                if(this.state.excludes.includes(key) && key != "staffID"){
                     return;
                 }else{
                     if(dataToPush[key] == "" || dataToPush[key] === undefined || dataToPush[key] === null){
@@ -364,7 +413,6 @@ class CreateJobForm extends React.Component{
             return unavailability.uid === dataToPush.staffID;
         })
 
-        console.log(dataToPush.jobDate);
         var valid = true;
         var error = "";
         var dataToPushJobDate = moment(dataToPush.jobDate).format("YYYY-MM-DD");
@@ -381,8 +429,8 @@ class CreateJobForm extends React.Component{
         })
 
         unavailabilitiesForUser.map((item)=>{
-            var itemDate = moment(item.unavailableOn).format("YYYY-MM-DD");
-            var itemTime = moment(item.unavailableOn).format("HH:mm");
+            var itemDate = moment(item.unavailableOn, "DD-MM-YYYY HH:mm").format("YYYY-MM-DD");
+            var itemTime = moment(item.unavailableOn, "DD-MM-YYYY HH:mm").format("HH:mm");
             if(dataToPushJobDate == itemDate && dataToPushJobTime == itemTime){
                 valid = false;
                 error = "Staff member is unavailable";
@@ -436,7 +484,11 @@ class CreateJobForm extends React.Component{
             dataToPush:dataToPush,
         })
 
-        this.findEligibleStaff();
+        if(this.state.dataToPush.instrumentID != "" ){
+        
+            this.findEligibleStaff();
+
+        }
     }
 
     render(){
@@ -463,7 +515,7 @@ class CreateJobForm extends React.Component{
                                 label={this.state.settings.fieldSettings[key].displayLabel}
                                 type={this.state.settings.fieldSettings[key].type}
                                 onChange={this.handleOnChange}
-                                options={this.state.settings.fieldSettings[key].options}
+                                options={key === "instrumentID" ? this.state.instruments : this.state.settings.fieldSettings[key].options}
                                 enabled={this.state.settings.fieldSettings[key].editable}
                                 value={this.state.dataToPush[key]}
                                 fieldLabel={key}

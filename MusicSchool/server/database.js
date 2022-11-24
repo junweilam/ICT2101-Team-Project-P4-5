@@ -193,6 +193,32 @@ knex.schema
     console.error(`There was an error setting up the database: ${error}`);
   });
 
+knex.schema
+  .hasTable("JobPreferences")
+  .then((exists) => {
+    if (!exists) {
+      return knex.schema
+        .createTable("JobPreferences", (table) => {
+          table.integer("uid");
+          table.foreign("uid").references("uid").inTable("Users")
+          table.integer("type");
+          table.foreign("type").references("type").inTable("Instruments")
+          table.date("date");
+        })
+        .then(() => {
+          console.log("Table 'JobPreferences' created");
+        })
+        .catch((error) => {
+          console.error(`There was an error creating table: ${error}`);
+        });
+    }
+  })
+  .then(() => {
+    console.log("done");
+  })
+  .catch((error) => {
+    console.error(`There was an error setting up the database: ${error}`);
+  });
 
 // Just for debugging purposes:
 // Log all data in "books" table

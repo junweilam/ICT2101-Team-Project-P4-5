@@ -144,3 +144,16 @@ exports.settings = async (req, res) => {
 
     res.json({success : true, settings: settings, message: "Settings fetched!"});
 }
+
+exports.getInstrumentTypes = async (req, res) => {
+    return res.json({
+        success: true,
+        options:[
+            {value: "Piano", label: "Piano"},
+            {value: "Drums", label: "Drums"},
+            {value: "Violin", label: "Violin"},
+            {value: "Trumpet", label: "Trumpet"},
+        ],
+        message: "Instrument types fetched!"
+    })
+}

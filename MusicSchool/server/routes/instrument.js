@@ -14,4 +14,6 @@ router.post("/update", instrumentRoutes.update);
 
 router.post("/settings", instrumentRoutes.settings);
 
+router.post("/getInstrumentTypes", instrumentRoutes.getInstrumentTypes);
+
 module.exports = router;

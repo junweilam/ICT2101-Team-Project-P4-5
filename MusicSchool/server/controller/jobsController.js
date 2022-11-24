@@ -85,7 +85,7 @@ exports.settings = async (req, res) => {
 
     await knex.select("*").from("Instruments").then(data =>{
         data.map((item) => {
-            return instruments.push({value: item.iid, label: item.name});
+            return instruments.push({value: item.iid, label: item.name, studio: item.studioID});
         })
     })
 

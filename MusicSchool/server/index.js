@@ -24,6 +24,7 @@ const jobMethods = require('./routes/jobs.js');
 const jobRejectionRequestMethods = require('./routes/jobRejectionRequest.js');
 
 const unavailabilitiesMethods = require('./routes/unavailabilities.js');
+const jobPreferencesMethods = require('./routes/jobPreferences.js');
 
 const app = express();
 var server = http.createServer(app);
@@ -50,6 +51,7 @@ app.use("/jobs",jobMethods);
 app.use("/jobRejectionRequest", jobRejectionRequestMethods);
 
 app.use("/unavailabilities", unavailabilitiesMethods);
+app.use("/jobPreferences", jobPreferencesMethods);
 
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
