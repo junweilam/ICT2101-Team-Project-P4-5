@@ -240,7 +240,6 @@ export class LoginFormBox extends React.Component {
                 <StdButton key={index} type={action.type} className="primary" onClick={action.onClick}>{action.label}</StdButton>)
             })}
           </div>
-          <div onClick={()=>this.props.setStep(1)}><span className="forgetPassword" href="#">Don't have an account? Click here to register.</span></div>
           <div onClick={()=>this.props.setStep(2)}><span className="forgetPassword" href="#">Forgot Password?</span></div>
         </form>
         <div className="spacer">

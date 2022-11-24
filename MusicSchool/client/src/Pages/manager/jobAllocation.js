@@ -364,7 +364,7 @@ class CreateJobForm extends React.Component{
         var staffsWithMisMatchedPreferences = this.props.preferences.filter((preference)=>{
             return preference.type != this.state.instruments.find((instrument)=>{
                 return instrument.value == this.state.dataToPush.instrumentID;
-            }).label.split(" ")[0];
+            }).label.split(" ")[0] && preference.date == moment(jobDate,"YYYY-MM-DD").format("DD-MM-YYYY");
         }).map((preference)=>{
             if(!staffIDs.includes(preference.uid)){
                 staffIDs.push(preference.uid);

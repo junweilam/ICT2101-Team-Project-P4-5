@@ -2971,7 +2971,7 @@ nav {
     flex-grow: 1;
     height:100%;
     width:100%;
-    padding:50px;
+    padding:15px;
     display:flex;
     flex-direction: column;
     align-items:center;
@@ -2985,6 +2985,7 @@ nav {
         display: flex;
         position: relative;
         height: 15%;
+        margin-bottom: 25px;
 
         &:after {
             content: "";
