@@ -6,6 +6,12 @@ import { StdInput } from "../../Components/input"
 
 import "../../styles/staff.scss"
 
+import DrumImg from "../../Assets/instrumenticons/drum.png"
+import PianoImg from"../../Assets/instrumenticons/piano.png"
+import TrumpetImg from "../../Assets/instrumenticons/trumpet.png"
+import ViolinImg from "../../Assets/instrumenticons/violin.png"
+import AnyInstrumentImg from "../../Assets/instrumenticons/music-instrument.png"
+
 export default class staffLanding extends React.Component{
 
     state={
@@ -27,6 +33,13 @@ export default class staffLanding extends React.Component{
             });
         })
 
+        await this.getJobPreferences().then((preferences)=>{
+            console.log(preferences);
+            this.setState({
+                preferences:preferences.data,
+            });
+        })
+
         await this.getJobSettings().then((settings)=>{
             console.log(settings);
             this.setState({
@@ -44,6 +57,18 @@ export default class staffLanding extends React.Component{
 
     getJobs = async() =>{
         return fetch("/jobs/allJobsForStaff", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({uid:this.props.user.data[0].uid}), 
+        }).then(res => {
+            return res.json();
+        })
+    }
+
+    getJobPreferences = async() =>{
+        return fetch("/jobPreferences/allPreferencesForUser", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -171,12 +196,15 @@ export default class staffLanding extends React.Component{
                 </div>
             </div>
 
+            <JobPreferences preferences={this.state.preferences}>
+
+            </JobPreferences>
             <div className="col-12">
-                    <WeekSchedule data={this.state.jobs} unavailabilities={this.state.unavailabilities} showModal={this.showModal}></WeekSchedule>
-                </div>
-                <div className="col-12">
-                    <MonthSchedule data={this.state.jobs}></MonthSchedule>
-                </div>
+                <WeekSchedule data={this.state.jobs} unavailabilities={this.state.unavailabilities} showModal={this.showModal}></WeekSchedule>
+            </div>
+            <div className="col-12">
+                <MonthSchedule data={this.state.jobs}></MonthSchedule>
+            </div>
             <div className="row gy-4">
             </div>
 
@@ -184,6 +212,133 @@ export default class staffLanding extends React.Component{
             <JobModal job={this.state.content} closeModal={this.closeModal} settings={this.state.settings}></JobModal>
             }
             </AppPageContainer>
+        )
+    }
+}
+
+export class JobPreferences extends React.Component{
+    state={
+        startDay : moment().startOf('week'),
+        endDay : moment().endOf('week'),
+        calendar : [],
+    }
+
+    componentDidMount(){
+        console.log(this.props.preferences);
+        this.setState({
+            calendar:this.generateCalendar()
+        });
+    }
+
+    generateCalendar = () =>{
+        let calendar = [];
+        let day = this.state.startDay;
+        let endDay = day.clone().add(6,'days');
+        this.setState({
+            endDay:endDay
+        })
+        while(day.isSameOrBefore(endDay)){
+            calendar.push(day);
+            day = day.clone().add(1,'d');
+        }
+        return calendar;
+    }
+
+    nextWeek = async() => {
+        await this.setState({
+            startDay:moment(this.state.startDay).add(7,'days'),
+        })
+
+        this.setState({
+            calendar:this.generateCalendar()
+        });
+    }
+
+    prevWeek = async() => {
+        await this.setState({
+            startDay:moment(this.state.startDay).subtract(7,'days'),
+        })
+
+        this.setState({
+            calendar:this.generateCalendar()
+        });
+    }
+
+    render(){
+        return(
+
+            <div className="col-12">
+                <div className="jobPreferences card-bg">
+                    <div className="header">Job Preferences</div>
+                    <div className="weekController">
+                        
+                        <div className="weekLabel">
+                            {moment(this.state.startDay).format("DD-MM-YYYY")} - {moment(this.state.endDay).format("DD-MM-YYYY")}
+                        </div>
+                        <div className="weekControls">
+                        <div className="prevWeek" onClick={this.prevWeek}>
+                            <i className="bi bi-chevron-left"></i>
+                        </div>
+                        <div className="nextWeek" onClick={this.nextWeek}>
+                            <i className="bi bi-chevron-right"></i>
+                        </div>
+                        </div>
+                    </div>
+                    <div className="body days">
+                        {this.state.calendar.map((day)=>{
+                            var pref = this.props.preferences.find((pref)=>pref.date===day.format("DD-MM-YYYY"));
+                            var icon = <i className="fa-solid fa-question"></i>;
+                                            
+                            
+                            
+
+                            console.log(icon);
+                            return <div className="preference-tile">
+                                <div className="day">
+                                    <span className="day-label">
+                                    {day.format("DD, ")}
+                                    {day.format("ddd")}
+                                    </span>
+                                    {  
+                                        pref === undefined ?
+                                        <div className="instrumentIcon">
+                                            <img src = {AnyInstrumentImg}></img>
+                                        </div>
+                                        :
+                                        pref.type === "Piano" ?
+                                        <div className="instrumentIcon">
+                                            <img src = {PianoImg}></img>
+                                        </div>
+                                        :
+                                        pref.type === "Violin" ?
+                                        <div className="instrumentIcon">
+                                            <img src = {ViolinImg}></img>
+                                        </div>
+                                        :
+                                        pref.type === "Drum" ?
+                                        <div className="instrumentIcon">
+                                            <img src = {DrumImg}></img>
+                                        </div>
+                                        :
+                                        pref.type === "Trumpet" ?
+                                        <div className="instrumentIcon">
+                                            <img src = {TrumpetImg}></img>
+                                        </div>
+                                        :
+                                        ""
+                                    }
+                                </div>
+                                <span className="instrument">
+                                    {pref === undefined ? 
+                                    "Any"
+                                    :
+                                    pref.type}
+                                </span>
+                            </div>
+                        })}
+                    </div>
+                </div>
+            </div>
         )
     }
 }

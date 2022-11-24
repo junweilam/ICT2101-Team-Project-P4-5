@@ -4,6 +4,7 @@ import './index.css';
 import './styles/main.scss'
 import './App.css';
 import './styles/appCommon.scss';
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';

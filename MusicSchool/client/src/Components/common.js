@@ -1387,34 +1387,21 @@ export class WeekView extends React.Component{
     }
     componentDidMount(){
         const days = this.generateCalendar();
-        const timeSlots = [
-            {time: "8:00", events: []},
-            {time: "8:30", events: []},
-            {time: "9:00", events: []},
-            {time: "9:30", events: []},
-            {time: "10:00", events: []},
-            {time: "10:30", events: []},
-            {time: "11:00", events: []},
-            {time: "11:30", events: []},
-            {time: "12:00", events: []},
-            {time: "12:30", events: []},
-            {time: "13:00", events: []},
-            {time: "13:30", events: []},
-            {time: "14:00", events: []},
-            {time: "14:30", events: []},
-            {time: "15:00", events: []},
-            {time: "15:30", events: []},
-            {time: "16:00", events: []},
-            {time: "16:30", events: []},
-            {time: "17:00", events: []},
-            {time: "17:30", events: []},
-            {time: "18:00", events: []},
-            {time: "18:30", events: []},
-            {time: "19:00", events: []},
-            {time: "19:30", events: []},
-            {time: "20:00", events: []},
-            {time: "20:30", events: []},
-        ]
+        
+        const timeSlots = []
+
+        var startTime = moment(this.props.startTime, "HH:mm");
+
+        var endTime = moment(this.props.endTime, "HH:mm");
+
+        while (startTime.isBefore(endTime)) {
+            timeSlots.push({
+                time: startTime.format("HH:mm"),
+                event: [],
+            });
+            startTime.add(this.props.increments, "minutes");
+        }
+
         this.setState({
             calendar: days,
             timeSlots: timeSlots
@@ -1568,6 +1555,11 @@ export class WeekView extends React.Component{
             </div>
         )
     }
+}
+WeekView.defaultProps = {
+    startTime: "08:00",
+    endTime: "21:00",
+    increments: 30,
 }
 
 export class DayView extends React.Component{

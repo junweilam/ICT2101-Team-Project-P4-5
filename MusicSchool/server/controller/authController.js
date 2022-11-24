@@ -159,9 +159,6 @@ exports.settings = async (req, res) => {
 }
 
 exports.managerSettings = async (req, res) => {
-
-
-
     const columnSettings = {
         // Configures the headers of the table
         // Pls match header names with column names (case sensitive!)
@@ -197,12 +194,12 @@ exports.managerSettings = async (req, res) => {
         },
         "username":{
             type: "text",
-            editable:true,
+            editable:false,
             displayLabel: "Username",
         },
         "name":{
             type: "text",
-            editable:true,
+            editable:false,
             displayLabel: "Name",
         },
         "role":{

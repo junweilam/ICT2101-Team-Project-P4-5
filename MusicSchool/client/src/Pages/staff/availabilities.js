@@ -107,7 +107,6 @@ export default class Availabilities extends React.Component{
                 <JobPreferencesSection uid = {this.props.user.data[0].uid} days={
                     this.state.days
                 }>
-
                 </JobPreferencesSection>
                 <WeekSchedule 
                 data={this.state.availabilities} 

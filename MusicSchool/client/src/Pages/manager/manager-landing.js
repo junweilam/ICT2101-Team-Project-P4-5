@@ -8,6 +8,8 @@ import {MultiStepBox, StdButton} from "../../Components/common"
 
 import {StdInput} from "../../Components/input"
 
+import { JobPreferences } from "../staff/staff-landing"
+
 import "../../styles/manager.scss"
 import "../../styles/appCommon.scss"
 
@@ -53,6 +55,13 @@ async componentDidMount(){
         console.log(requests);
         this.setState({
             requests:requests.data,
+        });
+    })
+
+    await this.getPreferences().then((preferences)=>{
+        console.log(preferences);
+        this.setState({
+            preferences:preferences.data,
         });
     })
 
@@ -114,6 +123,18 @@ getJobs = async () => {
 
 getRequests = async () => {
     return fetch("/jobRejectionRequest/allRequestAndJobs",{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+    .then(res => {
+        return res.json();
+    });
+}
+
+getPreferences = async () => {
+    return fetch("/jobPreferences/allPreferences",{
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -402,6 +423,9 @@ render(){
                 {this.state.content.data.map((item, index) => {
                     return(
                         <div className="staff-extended"> 
+                            <JobPreferences preferences ={this.state.preferences.filter((pref)=>{
+                                return pref.uid == item.uid;
+                            })}></JobPreferences>
                             <WeekSchedule sid ={item.uid} data = {this.state.jobs} unavailabilities = {this.state.unavailabilities}/>
                         </div>
                     ) 

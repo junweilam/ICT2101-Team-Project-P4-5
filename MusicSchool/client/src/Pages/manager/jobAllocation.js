@@ -10,6 +10,7 @@ import {StdInput} from "../../Components/input"
 
 import "../../styles/manager.scss"
 import "../../styles/appCommon.scss"
+import { JobPreferences } from "../staff/staff-landing"
 
 export default class JobAllocation extends React.Component{
     state={
@@ -221,6 +222,9 @@ render(){
                 {this.state.content.data.map((item, index) => {
                     return(
                         <div className="staff-extended"> 
+                            <JobPreferences preferences ={this.state.preferences.filter((pref)=>{
+                                return pref.uid == item.uid;
+                            })}></JobPreferences>
                             <WeekSchedule sid ={item.uid} data = {this.state.jobs} unavailabilities = {this.state.unavailabilities}/>
                         </div>
                     ) 

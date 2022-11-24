@@ -2,6 +2,9 @@
 
 .staff-extended{
     margin:15px 0px ;
+    display:flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .manager-landing-header{
