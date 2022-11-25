@@ -263,7 +263,7 @@ render(){
                                     <div className="staff-item-name">
                                         {user.name}
                                     </div>
-                                    <div className="staff-item-hours">
+                                    <div className={"staff-item-hours"}>
                                         {user.hours} Hours
                                     </div>
                                 </div>
@@ -409,6 +409,27 @@ render(){
                                 })}
                             </div>
                         </MultiStepBox>
+                    </div>
+                </div>
+
+                
+                <div className="manager-over-forty bottom card-bg no-pad">
+                    <div className="header">
+                        Staff Over 40 workinghours
+                        <span className="requestCount">{this.state.content.data.filter((staff)=>staff.hours > 40).length} <span className="rq">Staff</span></span>
+                    </div>
+                    <div className="body">
+                        {this.state.content.data.filter((staff)=>staff.hours > 40).map((staff,index)=>{
+
+                            <div className="staff-item">
+                                <div className="staff-item-name">
+                                    {staff.name}
+                                </div>
+                                <div className={"staff-item-hours"}>
+                                    {staff.hours} Hours
+                                </div>
+                            </div>
+                        })}
                     </div>
                 </div>
             </div>

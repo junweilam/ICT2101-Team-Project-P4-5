@@ -12,7 +12,8 @@
     grid-template-columns: repeat(2, minmax(0,1fr));
     grid-template-areas: 
     "top-three requests"
-    "bottom-three requests";
+    "bottom-three requests"
+    "over-forty over-forty";
     gap: 15px;
     margin:0px 0px 15px 0px;
     .manager-top-three{
@@ -38,6 +39,27 @@
             .staff-item-hours{
                 font-size: 0.8rem;
                 color:$chimericBlack;
+                font-weight: bold;
+
+            }
+        }
+    }
+
+    .manager-over-forty{
+        grid-area: over-forty;
+
+        .header{
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0px 15px;
+            height:46px;
+            
+            .requestCount{
+                color:$primary;
+                background-color: white;
+                border-radius: 10px;
+                padding:7.5px;
                 font-weight: bold;
             }
         }

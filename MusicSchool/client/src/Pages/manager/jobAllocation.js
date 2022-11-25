@@ -11,6 +11,7 @@ import {StdInput} from "../../Components/input"
 import "../../styles/manager.scss"
 import "../../styles/appCommon.scss"
 import { JobPreferences } from "../staff/staff-landing"
+import e from "cors"
 
 export default class JobAllocation extends React.Component{
     state={
@@ -427,16 +428,15 @@ class CreateJobForm extends React.Component{
         var error = "";
         var dataToPushJobDate = moment(dataToPush.jobDate).format("YYYY-MM-DD");
         var dataToPushJobTime = moment(dataToPush.jobTime).format("HH:mm");
-
-        jobsForUser.map((item)=>{
-            var itemJobDate = moment(item.jobDate).format("YYYY-MM-DD");
-            var itemJobTime = moment(item.jobTime).format("HH:mm");
-            if(dataToPushJobDate == itemJobDate && dataToPushJobTime == itemJobTime){
-                valid = false;
-                error = "Job already exists";
-                return {valid:valid, error:error};
-            }
+        var overlappingJob = jobsForUser.find((job)=>{
+            return job.jobDate == dataToPushJobDate && job.jobTime == dataToPushJobTime;
         })
+
+        if(overlappingJob !== undefined){
+            valid = false;
+            error = "Staff already has a job at this time!";
+            return {valid:valid, error:error};
+        }
 
         unavailabilitiesForUser.map((item)=>{
             var itemDate = moment(item.unavailableOn, "DD-MM-YYYY HH:mm").format("YYYY-MM-DD");
