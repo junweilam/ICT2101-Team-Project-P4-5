@@ -415,7 +415,7 @@ render(){
                 
                 <div className="manager-over-forty bottom card-bg no-pad">
                     <div className="header">
-                        Staff Over 40 workinghours
+                        Staff Over 40 Working Hours
                         <span className="requestCount">{this.state.content.data.filter((staff)=>staff.hours > 40).length} <span className="rq">Staff</span></span>
                     </div>
                     <div className="body">
